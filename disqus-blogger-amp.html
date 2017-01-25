@@ -158,13 +158,13 @@ function loadImage(){
 		image = img;
 			
 		if ( imglink !== false ){
-			var a 		= d.createElement('a');
-			a.href  	= imglink.indexOf('http:') !== -1 ? imglink.replace('http:','https:') : imglink;	
+			var a = d.createElement('a');
+			a.href = imglink.indexOf('http:') !== -1 ? imglink.replace('http:','https:') : imglink;	
 			a.setAttribute("target", getQueryValue( 'imgtarget' ) === false ? '_blank' : getQueryValue( 'imgtarget' ) );	
-			image 		= a.appendChild( img )	
+			image = a.appendChild( img )	
 		};
 			
-		(d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild( image );
+		(d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild( img );
 
 	} else {		
 			
