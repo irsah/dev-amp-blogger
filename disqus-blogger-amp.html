@@ -11,7 +11,7 @@
 # Usages for Disqus:
 #
 <amp-iframe 
-	expr:src='&quot;{{PATH-TO-FILE}}?ampactions={{actions}}shortname={{DISQUS_SHORTNAME}}&amp;pagetype=item&amp;canonicalurl=&quot; + data:blog.canonicalUrl + &quot;&amp;url=&quot; + data:blog.url + &quot;&amp;homepageurl=&quot; + data:blog.homepageUrl + &quot;&amp;canonicalhomepageurl=&quot; + data:blog.canonicalHomepageUrl' 
+	expr:src='&quot;{{PATH-TO-FILE}}?ampactions={{actions}}shortname={{DISQUS_SHORTNAME}}&amp;pagetype=item&amp;fontfamily={{FONT_FAMILY}}&amp;fontlinkcolor={{LINK_COLOR}}&amp;canonicalurl=&quot; + data:blog.canonicalUrl + &quot;&amp;url=&quot; + data:blog.url + &quot;&amp;homepageurl=&quot; + data:blog.homepageUrl + &quot;&amp;canonicalhomepageurl=&quot; + data:blog.canonicalHomepageUrl' 
 	frameborder='0' 
 	height='400' 
 	layout='responsive' 
@@ -47,6 +47,8 @@
 # Replace {{IMAGE_ALT}} with an image alt (default: alt='')
 # Replace {{IMAGE_LINK}} with the image link URL. If none provided displays image w/o link.
 # Replace {{IMAGE_TARGET}} with the image link target (default: target='_blank')
+# Replace {{FONT_FAMILY}} with the font family (default: sans-serif)
+# Replace {{LINK_COLOR}} with link color in HEX (default: 000000)
 #
 */
   var d = document;
@@ -97,75 +99,89 @@
   var disqus_blogger_homepage_url = getQueryValue('homepageurl');
   var disqus_blogger_canonical_homepage_url = getQueryValue('canonicalhomepageurl');
 	
-  function loadDisqus(){ 
-	
-	  if( pagetype === "item"){
-		  
-		  (function() {
-		    var js = d.createElement('script');
-		    js.type = 'text/javascript';
-		    js.async = true;
-		    js.src = '//'+disqus_shortname+'.disqus.com/blogger_item.js';
-		    (d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild( js );
-		  })();
-		  
-		} else {
-		
-		  (function() {
-		    var js = d.createElement('script');
-		    js.type = 'text/javascript';
-		    js.async = true;
-		    js.src = '//'+disqus_shortname+'.disqus.com/blogger_index.js';
-		    (d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild( js );
-		  })();
-		  
-	  };
-	};
-	
-	/* loads images into amp-iframes from external HTTPS resources */
-	
-	function loadImage(){
-		
-		d.getElementById('discus_thread').parentNode().removeChild( d.getElementById('discus_thread') );
-		
-		var image,
-				imgsrc 		= getQueryValue( 'imgsrc' ),
-				imglink		= getQueryValue( 'imglink' );
-				
-		if ( imgsrc !== false	|| imgsrc.indexOf('https:') !== -1 ){
-			
-			var img 		= d.createElement('img');
-			img.src 		= imgsrc;
-			img.setAttribute( "width", getQueryValue( 'imgwidth' ) === false ? '' : getQueryValue( 'imgwidth' ) );
-			img.setAttribute( "height", getQueryValue( 'imgheight' ) === false ? '' : getQueryValue( 'imgheight' ) );
-			img.setAttribute( "alt", getQueryValue( 'imgalt' ) === false ? '' : getQueryValue( 'imgalt' ) );	
-			image = img;
-			
-			if ( imglink !== false ){
-				var a 		= d.createElement('a');
-				a.href  	= imglink.indexOf('http:') !== -1 ? imglink.replace('http:','https:') : imglink;	
-				a.setAttribute("target", getQueryValue( 'imgtarget' ) === false ? '_blank' : getQueryValue( 'imgtarget' ) );	
-				image 		= a.appendChild( img )	
-			};
-			
-			(d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild( image );
+function loadDisqus(){ 
 
-		} else {		
-			
-			return (false);
-			
-		};
-	}; 
-	
-	var actions = getQueryValue( 'ampactions' );
-	
-	switch ( actions ){
-		case 'disqus' : loadDisqus(); break;
-		case 'image' : loadImage();  break;
-		default: 
-			var div = d.createElement('div');
-			div.innerHTML = 'Error(s) in plugin query values!';
-			(d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild( div );		
+	var fontfamily = getQueryValue( 'font-family' ) === false ? 'sans-serif': getQueryValue( 'font-family' );
+	var fontlinkcolor = getQueryValue( 'fontlinkcolor') === false ? '000000' : getQueryValue( 'fontlinkcolor') ;
+    var disquscss = '#disqus_thread { font-family:' + fontfamily + '} a { color: #' + fontlinkcolor + '}',
+    	head = d.head || d.getElementsByTagName('head')[0],
+    	tag = d.createElement('style');
+	tag.type = 'text/css';
+	if ( tag.styleSheet ){
+  		tag.styleSheet.cssText = disquscss;
+	} else {
+  		tag.appendChild( d.createTextNode( disquscss ) );
 	};
+	head.appendChild( tag );
+
+	if( pagetype === "item"){
+		  
+		(function() {
+			var js = d.createElement('script');
+			js.type = 'text/javascript';
+			js.async = true;
+			js.src = '//'+disqus_shortname+'.disqus.com/blogger_item.js';
+			(d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild( js );
+		})();
+	  
+	} else {
+		
+		(function() {
+			var js = d.createElement('script');
+			js.type = 'text/javascript';
+			js.async = true;
+			js.src = '//'+disqus_shortname+'.disqus.com/blogger_index.js';
+			(d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild( js );
+		})();
+	
+	};
+
+};
+	
+/* loads images into amp-iframes from external HTTPS resources */
+	
+function loadImage(){
+		
+	d.getElementById('discus_thread').parentNode().removeChild( d.getElementById('discus_thread') );
+		
+	var image,
+		imgsrc 		= getQueryValue( 'imgsrc' ),
+		imglink		= getQueryValue( 'imglink' );
+				
+	if ( imgsrc !== false	|| imgsrc.indexOf('https:') !== -1 ){
+		
+		var img 		= d.createElement('img');
+		img.src 		= imgsrc;
+		img.setAttribute( "width", getQueryValue( 'imgwidth' ) === false ? '' : getQueryValue( 'imgwidth' ) );
+		img.setAttribute( "height", getQueryValue( 'imgheight' ) === false ? '' : getQueryValue( 'imgheight' ) );
+		img.setAttribute( "alt", getQueryValue( 'imgalt' ) === false ? '' : getQueryValue( 'imgalt' ) );	
+		image = img;
+			
+		if ( imglink !== false ){
+			var a 		= d.createElement('a');
+			a.href  	= imglink.indexOf('http:') !== -1 ? imglink.replace('http:','https:') : imglink;	
+			a.setAttribute("target", getQueryValue( 'imgtarget' ) === false ? '_blank' : getQueryValue( 'imgtarget' ) );	
+			image 		= a.appendChild( img )	
+		};
+			
+		(d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild( image );
+
+	} else {		
+			
+		return (false);
+		
+	};
+}; 
+	
+var actions = getQueryValue( 'ampactions' );
+	
+switch ( actions ){
+	case 'disqus' : loadDisqus(); break;
+	case 'image' : loadImage();  break;
+	default: 
+		var div = d.createElement('div');
+		div.innerHTML = 'Error(s) in plugin query values!';
+		(d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild( div );		
+};
   
 </script>
