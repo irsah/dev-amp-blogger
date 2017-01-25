@@ -161,8 +161,8 @@
 	var actions = getQueryValue( ampactions );
 	
 	switch ( actions ){
-		'disqus' : loadDisqus(); break;
-		'image' : loadImage();  break;
+		case 'disqus' : loadDisqus(); break;
+		case 'image' : loadImage();  break;
 		default: 
 			var div = d.createElement('div');
 			div.innerHTML = 'Error(s) in plugin query values!';
