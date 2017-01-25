@@ -85,20 +85,19 @@
   };
   
   /* loads Disqus js */
-  
-  function loadDisqus(){ 
+  var pagetype = getQueryValue('pagetype');
+  if ( pagetype === false ) pagetype = 'item';
+  var disqus_shortname = getQueryValue('shortname');
+  var disqus_blogger_current_url = getQueryValue('canonicalurl');
 
-	  var pagetype = getQueryValue('pagetype');
-	  if ( pagetype === false ) pagetype = 'item';
-	  var disqus_shortname = getQueryValue('shortname');
-	  var disqus_blogger_current_url = getQueryValue('canonicalurl');
+  if ( !disqus_blogger_current_url.length ) {
+    disqus_blogger_current_url = getQueryValue('url');
+  };
+
+  var disqus_blogger_homepage_url = getQueryValue('homepageurl');
+  var disqus_blogger_canonical_homepage_url = getQueryValue('canonicalhomepageurl');
 	
-	  if ( !disqus_blogger_current_url.length ) {
-	    disqus_blogger_current_url = getQueryValue('url');
-	  };
-	
-	  var disqus_blogger_homepage_url = getQueryValue('homepageurl');
-	  var disqus_blogger_canonical_homepage_url = getQueryValue('canonicalhomepageurl');
+  function loadDisqus(){ 
 	
 	  if( pagetype === "item"){
 		  
