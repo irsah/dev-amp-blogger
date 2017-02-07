@@ -1,44 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <meta charset="utf-8" />
-
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script>
-/*    
-    $(document).ready(function(){
-	    // Data object: RSS feed URL, number of entries to return, result format, API version
-		var data = {
-		    q: 'http://feeds.bbci.co.uk/news/video_and_audio/news_front_page/rss.xml'
-		    , num: 10
-		    , output: 'json'
-		    , v: '1.0'
-		};
 
-		// AJAX call to Google Feed API which converts ATOM/RSS feed to JSON
-       $.ajax({
-			url:'http://ajax.googleapis.com/ajax/services/feed/load'
-			,type : "GET"
-     		,dataType : "jsonp"
-			,data: data
-			,success: function (json) {
-				var feed = json.responseData.feed;
-				if(!feed) return;
-				var entries = feed.entries;
-				if(!entries) return;
-				
-				var html = '';
-				for( var i=0; i<entries.length; i++){
-					html += '<h2><a href="'+ entries[i].link +'">'+ entries[i].title +'</a></h2>' +
-						  '<p>'+ entries[i].contentSnippet +'</p>';
-				};
-				
-				$('#output').html( html);
-					
-			}
-	  });
-  });
-  */
 </script>
 
 </head>
@@ -161,6 +127,60 @@ switch ( actions ){
 	case 'disqus' : loadDisqus(); break;
 	default : loadMessage();
 };
+	
+;(function($) {
+	var feed = "https://feeds.feedburner.com/Blogr-AMP?format=xml";
+	$.ajax( feed , {
+		accepts: { xml : "application/rss+xml" },
+		dataType : "xml",
+		success : function( data ) {
+			var entry = $( data ).find( 'entry' );
+			if ( typeof entry === undefined ) return false;
+			var UL = $('<ul/>').attr({ id : 'list-items' });
+			for ( var i = 0; i < 3; i++){
+				var LI = ('<li/>').attr({ class : 'list-item' });	
+				var caption = $('<div />').attr({ class : 'list-caption' });
+				var post = entry[i];
+				var title = post.find('title').text();
+				var link = $('a').attr({ href : post.find('feedburner:origLink').text() });
+				var image_url = post.find('media:thumbnail');
+				if ( typeof image_url === undefined ) {
+					image_url = '//4.bp.blogspot.com/-MowVHfLkoZU/VhgIRyPbIoI/AAAAAAAATtE/qHST4Q2YCCc/s1600/placeholder-image.jpg';	
+				};
+			    if ( image_url.indexOf("s72-c") !== -1){
+					image_url = image_url.replace( 's72-c' , 's'+ 400 );
+				} else if ( image_url.indexOf('ytimg') !== -1){
+					var yt1 = image_url.indexOf('/vi/'),
+					yt2 = image_url.lastIndexOf('/'),
+					yt3 = image_url.substring( yt1+4 , yt2 );
+					image_url = '//i.ytimg.com/vi/' + yt3 + '/sddefault.jpg';
+				} else ( image_url.indexOf('img.youtube') !== -1 ){
+					var yt4 = image_url.indexOf('/vi/'),
+					yt5 = image_url.lastIndexOf('/'),
+					yt6 = image_url.substring( yt4+4 , yt5);
+					image_url = '//img.youtube.com/vi/'+yt6+'/sddefault.jpg';
+				};
+				caption
+					.prepend( $('<h4 />').html('<a href="' + link + '">' + title + '</a>') )
+					.prepend( $('<span />').html( post.find('updated').text() ) )
+					.prepend( $('<a />').attr('href', post.find('author uri').text() ).html( post.find('author name').text() ) );
+				var content = post.find('content').text();
+				if( content.length > 160 ){
+					content = content.substring( 0 , 160 );
+					var end = content.lastIndexOf(" ");
+					content = $('<p />').html( content.substring( 0 , end ) + '...' );
+					caption.prepend( content )
+				};		
+				LI
+				.append( $('<img />').attr({ src: image_url, alt : title }) )
+				.append( caption )
+				.appendTo(UL);
+			};
+			$('body').append( UL );
+		}
+	});
+})(jQuery);
+	
 </script>
 	
 </body>
