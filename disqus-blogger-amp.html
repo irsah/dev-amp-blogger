@@ -6,46 +6,61 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="//rawgit.com/bbClassic/YRSS/master/yrss.min.js"></script>
 
-
 <style>
-	html,body {
-		-webkit-font-smoothing: antialiased;
-		-webkit-text-size-adjust:100%;
-		font-size:100%;
-		font-weight:400;
-		height:100%;
-		line-height:1.45;
-        }
+html,body {
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-size-adjust:100%;
+	font-size:100%;
+	font-weight:400;
+	height:100%;
+	line-height:1.45;
+	font-family: sans-serif, Helvetica, Arial;
+	color: #333;
+}
+	
+a , a:link { 
+	color:#06c;
+}
+	
+#feed , .entryWrapper { 
+	display: block 
+}
+	
+.entryWrapper { 
+	overflow : hidden; 
+	padding-top : 15px; 
+	padding-bottom: 15px; 
+	border-bottom: 1px solid #ddd; 
+}
+.entryImage { 
+	display : inline-block; 
+	float : left; 
+	margin-right : 15px; 
+	width: 33%; 
+}
+.entryImage img { 
+	display : block; 
+	max-width : 100%; 
+	height : auto; 
+}
+	
+.entryTitle {
+	font-weight: 700%;
+}
+	
+.entryDate {
+	font-size:85%;
+}
+
+.entryContent {
+	
+}
 </style>    
 
 </head>
 <body>
 
-
-
-<div id="wrapper">
-	<div id="feed"></div>
-</div>
-<script>
-var feed1 = 'http://blogr-amp.blogspot.com/feeds/posts/default?alt=rss';
-$('#feed').rssfeed( feed1 , {
-    ssl: true,
-    limit: 3,
-    showerror: true,
-    errormsg: '',
-    tags: false,
-    date: true,
-    dateformat: 'spellmonth',
-    titletag: 'h4',
-    content: true,
-    image: true,
-    snippet: true,
-    snippetlimit: 160,
-    linktarget: '_blank'
-}, function () {
-    // optional callback function
-});
-</script>
+<div id="feed"></div>
 
 <div id="comments"></div>
 	
@@ -118,7 +133,7 @@ function getQueryValue( vars ) {
 function loadMessage(){
 	var H3 = doc.createElement('h3');
 	H3.innerHTML = 'No contents available.'
-	( doc.getElementsByTagName('head')[0] || doc.getElementsByTagName('body')[0] ).appendChild( H3 )
+	doc.getElementsByTagName('body')[0].appendChild( H3 )
 };
 
 var pagetype = getQueryValue('pagetype');
@@ -153,17 +168,52 @@ function loadDisqus(){
 			js.type = 'text/javascript';
 			js.async = true;
 			js.src = '//'+disqus_shortname+'.disqus.com/blogger_item.js';
-			(doc.getElementsByTagName('head')[0] || doc.getElementsByTagName('body')[0]).appendChild( js );
+			doc.getElementsByTagName('body')[0].appendChild( js );
 		})();
 	};
 };
 	
-var actions = getQueryValue( 'ampactions' );
-switch ( actions ){
-	//case 'disqus' : loadDisqus(); break;
-	//default : loadMessage();
-};
 
+
+function loadFeed(){	
+	var feed = getQueryValue('canonicalhomepageurl') +'feeds/posts/default?alt=rss';
+	var feed_ssl = getQueryValue('feedssl') === false ? true : false;
+	var feed_limit = getQueryValue('feedlimit') === false ? 5 : parseFloat( getQueryValue('feedlimit') );
+	var feed_tags = getQueryValue('feedtags') === false ? false : true;
+	var feed_date = getQueryValue('feeddate') === false ? true : false;
+	var feed_date_format = getQueryValue('feeddateformat') === false ? 'spellmonth' : getQueryValue('feeddateformat');
+	var feed_title = getQueryValue('feedtitletag') === false ? 'h4' : getQueryValue('feedtitletag');
+	var feed_content = getQueryValue('feedcontent') === false ? true : false;
+	var feed_image = getQueryValue('feedimage') === false ? true : false;
+	var feed_snippet = getQueryValue('feedsnippet') === false ? true : false;
+	var feed_snippet_limit = getQueryValue('feedsnippetlimit') === false ? 160 : parseFloat( getQueryValue('feedsnippetlimit') );
+	var feed_link_target = getQueryValue('feedlinktarget') === false ? '_blank' : getQueryValue('feedlinktarget');
+	$('#feed').rssfeed( feed , {
+	    ssl: feed_ssl,
+	    limit: feed_limit,
+	    showerror: true,
+	    errormsg: '',
+	    tags: feed_tags,
+	    date: feed_date,
+	    dateformat: feed_date_format,
+	    titletag: feed_title,
+	    content: feed_content,
+	    image: feed_image,
+	    snippet: feed_snippet,
+	    snippetlimit: feed_snippet_limit,
+	    linktarget: feed_link_target
+	}, function () {
+	    // optional callback function
+	});
+};
+	
+var actions = getQueryValue( 'ampactions' );
+	
+switch ( actions ){
+	case 'disqus' : loadDisqus(); break;
+	case 'feed' : loadFeed(); break;
+	default : loadMessage();
+};
 </script>
 	
 </body>
