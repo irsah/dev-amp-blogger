@@ -27,10 +27,10 @@
 	<div id="feed"></div>
 </div>
 <script>
-var feed1 = 'https://blogr-amp.blogspot.com/feeds/posts/default?alt=rss';
+var feed1 = 'http://blogr-amp.blogspot.com/feeds/posts/default?alt=rss';
 $('#feed').rssfeed( feed1 , {
-    ssl: true,
-    limit: 5,
+    ssl: false,
+    limit: 3,
     showerror: true,
     errormsg: '',
     tags: false,
