@@ -147,7 +147,6 @@ function loadMessage(){
 function loadScript( urls ){
 	var script = doc.createElement('script');
 	script.type = 'text/javascript';
-	script.async = true;
 	script.src = urls;
 	doc.getElementsByTagName('head')[0].appendChild( script );
 };
