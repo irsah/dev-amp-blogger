@@ -38,22 +38,27 @@ a , a:link {
 	margin-right : 15px; 
 	width: 33%; 
 }
+	
 .entryImage img { 
 	display : block; 
 	max-width : 100%; 
 	height : auto; 
 }
 	
-.entryTitle {
+h4 {
 	font-weight: 700%;
+	margin : 0;
+	padding : 0;
 }
 	
 .entryDate {
-	font-size:85%;
+	font-size : 85%;
+	display : block;
+	margin : 15px 0;
 }
 
 .entryContent {
-	
+	font-size: 80%;
 }
 </style>    
 
@@ -188,6 +193,7 @@ function loadFeed(){
 	var feed_snippet = getQueryValue('feedsnippet') === false ? true : false;
 	var feed_snippet_limit = getQueryValue('feedsnippetlimit') === false ? 160 : parseFloat( getQueryValue('feedsnippetlimit') );
 	var feed_link_target = getQueryValue('feedlinktarget') === false ? '_blank' : getQueryValue('feedlinktarget');
+	var feed_height = getQueryValue('feedcontainerheight') === false ? 600 : parseFloat( getQueryValue('feedcontainerheight') );
 	$('#feed').rssfeed( feed , {
 	    ssl: feed_ssl,
 	    limit: feed_limit,
@@ -198,12 +204,18 @@ function loadFeed(){
 	    dateformat: feed_date_format,
 	    titletag: feed_title,
 	    content: feed_content,
-	    image: true,
+	    image: feed_image,
 	    snippet: feed_snippet,
 	    snippetlimit: feed_snippet_limit,
 	    linktarget: feed_link_target
 	}, function () {
 	    // optional callback function
+	});
+	var fheight = $('#feed').height();
+	if ( fheight > feed_height){
+		$('#feed').css({
+		'height' : feed_height +'px',
+		'overflow-y' : 'auto'
 	});
 };
 	
