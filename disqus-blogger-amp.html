@@ -1,7 +1,7 @@
 <div id="Blog1">
 	<div id="comments"></div>
-	<div class="post-comment-link"></div>
-	<div class="comment-link"></div>
+	<a class='timestamp-link' href=''>&nbsp;</a>
+	<a class="comment-link" href=''>&nbsp;</a>
 </div>
 <script>
 /*
@@ -85,6 +85,12 @@ if ( !disqus_blogger_current_url.length ) {
 };
 var disqus_blogger_homepage_url = getQueryValue('homepageurl');
 var disqus_blogger_canonical_homepage_url = getQueryValue('canonicalhomepageurl');	
+	
+var time = doc.querySelector('.timestamp-link');
+time.setAttribute('href', getQueryValue('canonicalurl') );
+var link = doc.querySelector('.comment-link');
+link.setAttribute('href', getQueryValue('canonicalurl') );
+
 function loadDisqus(){ 
 	var fontfamily = getQueryValue( 'fontfamily' ) === false ? 'sans-serif': getQueryValue( 'fontfamily' );
 	var fontlinkcolor = getQueryValue( 'fontlinkcolor') === false ? '000000' : getQueryValue( 'fontlinkcolor') ;
