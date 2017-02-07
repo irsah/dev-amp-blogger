@@ -187,10 +187,10 @@ function loadFeed(){
 			'https://rawgit.com/bbClassic/YRSS/master/yrss.min.js'
 		];
 		for( var i = 0; i < src.length; i++){
-			var script[i] = doc.createElement('script');
-			script[i].type = "text/javascript";
-			script[i].src = src[i];
-			doc.getElementsByTagName('head')[0].appendChild(script[i]);
+			var script = doc.createElement('script');
+			script.type = "text/javascript";
+			script.src = src[i];
+			doc.getElementsByTagName('head')[0].appendChild( script );
 		};
 	};
 	var feed = getQueryValue('canonicalhomepageurl') +'feeds/posts/default?alt=rss';
