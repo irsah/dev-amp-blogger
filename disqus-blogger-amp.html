@@ -35,7 +35,7 @@
 var doc = document;
 var win = window;
 
-w.addEventListener('message', receiveMessage, false);
+win.addEventListener('message', receiveMessage, false);
   
 function receiveMessage( event ) {
 	if ( event.data ) {
@@ -45,7 +45,7 @@ function receiveMessage( event ) {
   	} catch (err) {};
   	if (!msg) return false;
  		if ( msg.name === 'resize' ) {
-    	w.parent.postMessage({
+    	win.parent.postMessage({
       	sentinel: 'amp',
       	type: 'embed-size',
       	height: msg.data.height
@@ -80,7 +80,7 @@ function loadDisqus(){
 	var fontfamily = getQueryValue( 'fontfamily' ) === false ? 'sans-serif': getQueryValue( 'fontfamily' );
 	var fontlinkcolor = getQueryValue( 'fontlinkcolor') === false ? '000000' : getQueryValue( 'fontlinkcolor') ;
 	var disquscss = '#disqus_thread { font-family:' + fontfamily + '} a { color: #' + fontlinkcolor + '}',
-  head = doc.head || doc.getElementsByTagName('head')[0],
+	head = doc.head || doc.getElementsByTagName('head')[0],
 	tag = doc.createElement('style');
 	tag.type = 'text/css';
 	if ( tag.styleSheet ){
@@ -96,7 +96,7 @@ function loadDisqus(){
 			js.type = 'text/javascript';
 			js.async = true;
 			js.src = '//'+disqus_shortname+'.disqus.com/blogger_item.js';
-			(d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild( js );
+			(doc.getElementsByTagName('head')[0] || doc.getElementsByTagName('body')[0]).appendChild( js );
 		})();
 	} else {
 		(function() {
@@ -106,7 +106,7 @@ function loadDisqus(){
 			js.type = 'text/javascript';
 			js.async = true;
 			js.src = '//'+disqus_shortname+'.disqus.com/blogger_index.js';
-			(d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild( js );
+			(doc.getElementsByTagName('head')[0] || doc.getElementsByTagName('body')[0]).appendChild( js );
 		})();
 	};
 };
@@ -115,9 +115,6 @@ var actions = getQueryValue( 'ampactions' );
 switch ( actions ){
 	case 'disqus' : loadDisqus(); break;
 	case 'image' : loadImage();  break;
-	default: 
-		var div = d.createElement('div');
-		div.innerHTML = 'Error(s) in plugin query values!';
-		d.getElementsByTagName('body')[0].appendChild( div );		
+	default: return (false);		
 };
 </script>
