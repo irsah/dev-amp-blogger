@@ -144,6 +144,14 @@ function loadMessage(){
 	doc.getElementsByTagName('body')[0].appendChild( H3 )
 };
 
+function loadScript( urls ){
+	var script = doc.createElement('script');
+	script.type = 'text/javascript';
+	script.async = true;
+	script.src = urls;
+	doc.getElementsByTagName('head')[0].appendChild( script );
+};
+	
 var pagetype = getQueryValue('pagetype');
 if ( pagetype === false ) pagetype = 'item';
 var disqus_shortname = getQueryValue('shortname');
@@ -159,9 +167,9 @@ function loadDisqus(){
 
 	var fontfamily = getQueryValue( 'fontfamily' ) === false ? 'sans-serif': getQueryValue( 'fontfamily' );
 	var fontlinkcolor = getQueryValue( 'fontlinkcolor') === false ? '000000' : getQueryValue( 'fontlinkcolor') ;
-	var disquscss = '#disqus_thread { font-family:' + fontfamily + '} a { color: #' + fontlinkcolor + '}',
-	head = doc.getElementsByTagName('head')[0],
-	tag = doc.createElement('style');
+	var disquscss = '#disqus_thread { font-family:' + fontfamily + '} a { color: #' + fontlinkcolor + '}';
+	var head = doc.getElementsByTagName('head')[0];
+	var tag = doc.createElement('style');
 	tag.type = 'text/css';
 	if ( tag.styleSheet ){
   		tag.styleSheet.cssText = disquscss;
@@ -171,30 +179,14 @@ function loadDisqus(){
 	head.appendChild( tag );
 
 	if( pagetype === "item"){
-		(function() {
-			var js = doc.createElement('script');
-			js.type = 'text/javascript';
-			js.async = true;
-			js.src = '//'+disqus_shortname+'.disqus.com/blogger_item.js';
-			doc.getElementsByTagName('body')[0].appendChild( js );
-		})();
+		loadScript('//' + disqus_shortname + '.disqus.com/blogger_item.js');
 	};
 };
 	
-
-
 function loadFeed(){
-	if (typeof(jQuery) === 'undefined') {
-		var src = [
-			'https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
-			'https://rawgit.com/bbClassic/YRSS/master/yrss.min.js'
-		];
-		for( var i = 0; i < src.length; i++){
-			var script = doc.createElement('script');
-			script.type = "text/javascript";
-			script.src = src[i];
-			doc.getElementsByTagName('head')[0].appendChild( script );
-		};
+	if ( typeof(jQuery) === 'undefined' ){
+		loadScript('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
+		loadScript('https://rawgit.com/bbClassic/YRSS/master/yrss.min.js');
 	};
 	var feed = getQueryValue('canonicalhomepageurl') +'feeds/posts/default?alt=rss';
 	var feed_ssl = getQueryValue('feedssl') === false ? true : false;
@@ -209,6 +201,7 @@ function loadFeed(){
 	var feed_snippet_limit = getQueryValue('feedsnippetlimit') === false ? 160 : parseFloat( getQueryValue('feedsnippetlimit') );
 	var feed_link_target = getQueryValue('feedlinktarget') === false ? '_blank' : getQueryValue('feedlinktarget');
 	var feed_height = getQueryValue('feedcontainerheight') === false ? 600 : parseFloat( getQueryValue('feedcontainerheight') );
+	
 	$('#feed').rssfeed( feed , {
 	    ssl: feed_ssl,
 	    limit: feed_limit,
