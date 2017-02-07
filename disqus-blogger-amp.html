@@ -2,10 +2,10 @@
 <html>
 <head>
 <meta charset=utf-8>
-
+<!--
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="//rawgit.com/bbClassic/YRSS/master/yrss.min.js"></script>
-
+-->
 <style>
 html,body {
 	-webkit-font-smoothing: antialiased;
@@ -180,7 +180,19 @@ function loadDisqus(){
 	
 
 
-function loadFeed(){	
+function loadFeed(){
+	if (typeof(jQuery) === 'undefined') {
+		var src = [
+			'https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
+			'https://rawgit.com/bbClassic/YRSS/master/yrss.min.js'
+		];
+		for( var i = 0; i < src.length; i++){
+			var script[i] = doc.createElement('script');
+			script[i].type = "text/javascript";
+			script[i].src = src[i];
+			doc.getElementsByTagName('head')[0].appendChild(script[i]);
+		};
+	};
 	var feed = getQueryValue('canonicalhomepageurl') +'feeds/posts/default?alt=rss';
 	var feed_ssl = getQueryValue('feedssl') === false ? true : false;
 	var feed_limit = getQueryValue('feedlimit') === false ? 5 : parseFloat( getQueryValue('feedlimit') );
@@ -216,7 +228,7 @@ function loadFeed(){
 		$('#feed').css({
 		'height' : feed_height +'px',
 		'overflow-y' : 'auto'
-	});
+	};
 };
 	
 var actions = getQueryValue( 'ampactions' );
