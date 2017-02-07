@@ -144,11 +144,19 @@ function loadMessage(){
 	doc.getElementsByTagName('body')[0].appendChild( H3 )
 };
 
-function loadScript( urls ){
-	var script = doc.createElement('script');
-	script.type = 'text/javascript';
-	script.src = urls;
-	doc.getElementsByTagName('head')[0].appendChild( script );
+function loadJsFilesSequentially(scriptsCollection, startIndex, librariesLoadedCallback) {
+	if (scriptsCollection[startIndex]) {
+		var fileref = doc.createElement('script');
+		fileref.setAttribute("type","text/javascript");
+		fileref.setAttribute("src", scriptsCollection[startIndex]);
+		fileref.onload = function(){
+			startIndex = startIndex + 1;
+			loadJsFilesSequentially(scriptsCollection, startIndex, librariesLoadedCallback)
+		};
+		doc.getElementsByTagName("head")[0].appendChild(fileref)
+	 } else {
+		 librariesLoadedCallback();
+	 };
 };
 	
 var pagetype = getQueryValue('pagetype');
@@ -178,13 +186,15 @@ function loadDisqus(){
 	head.appendChild( tag );
 
 	if( pagetype === "item"){
-		loadScript('//' + disqus_shortname + '.disqus.com/blogger_item.js');
+		var js = doc.createElement('script');
+		js.type = 'text/javascript';
+		js.async = true;
+		js.src = '//' + disqus_shortname + '.disqus.com/blogger_item.js';
+		doc.getElementsByTagName('head')[0].appendChild( js );
 	};
 };
 	
 function loadFeed(){
-
-	loadScript('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
 
 	var feed = getQueryValue('canonicalhomepageurl') +'feeds/posts/default?alt=rss';
 	var feed_ssl = getQueryValue('feedssl') === false ? true : false;
@@ -199,8 +209,6 @@ function loadFeed(){
 	var feed_snippet_limit = getQueryValue('feedsnippetlimit') === false ? 160 : parseFloat( getQueryValue('feedsnippetlimit') );
 	var feed_link_target = getQueryValue('feedlinktarget') === false ? '_blank' : getQueryValue('feedlinktarget');
 	var feed_height = getQueryValue('feedcontainerheight') === false ? 600 : parseFloat( getQueryValue('feedcontainerheight') );
-	
-	loadScript('https://rawgit.com/bbClassic/YRSS/master/yrss.min.js');
 	
 	$('#feed').rssfeed( feed , {
 	    ssl: feed_ssl,
@@ -227,12 +235,17 @@ function loadFeed(){
 		});
 	};
 };
-	
+
+
+var scriptLibrary = [];
+scriptLibrary.push('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
+scriptLibrary.push('https://rawgit.com/bbClassic/YRSS/master/yrss.min.js');
+
 var actions = getQueryValue( 'ampactions' );
 	
 switch ( actions ){
 	case 'disqus' : loadDisqus(); break;
-	case 'feed' : loadFeed(); break;
+	case 'feed' : loadJsFilesSequentially( scriptLibrary, 0, function(){ loadFeed() }); break;
 	default : loadMessage();
 };
 </script>
