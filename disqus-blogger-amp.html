@@ -13,7 +13,7 @@ html,body {
 	font-size : 100%;
 	font-weight : 400;
 	height : 100%;
-	line-height : 1.45;
+	line-height: 1.428;
 	font-family : sans-serif, Helvetica, Arial;
 	color : #333;
 }
@@ -176,7 +176,7 @@ var disqus_blogger_canonical_homepage_url = getQueryValue('canonicalhomepageurl'
 	
 /* loads Disqus js */
 function loadDisqus(){ 
-
+	doc.getElementById('feed').parentNode.removeChild( doc.getElementById('feed') );
 	var fontfamily = getQueryValue( 'fontfamily' ) === false ? 'sans-serif': getQueryValue( 'fontfamily' );
 	var fontlinkcolor = getQueryValue( 'fontlinkcolor') === false ? '000000' : getQueryValue( 'fontlinkcolor') ;
 	var disquscss = '#disqus_thread { font-family:' + fontfamily + '} a { color: #' + fontlinkcolor + '}';
@@ -214,6 +214,19 @@ function loadFeed(){
 	var feed_snippet_limit = getQueryValue('feedsnippetlimit') === false ? 160 : parseFloat( getQueryValue('feedsnippetlimit') );
 	var feed_link_target = getQueryValue('feedlinktarget') === false ? '_blank' : getQueryValue('feedlinktarget');
 	var feed_height = getQueryValue('feedcontainerheight') === false ? 600 : parseFloat( getQueryValue('feedcontainerheight') );
+
+	if( getQueryValue('feedcss') !== false ){
+		var CSS = getQueryValue('feedcss');
+		var HEAD = doc.getElementsByTagName('head')[0];
+		var TAG = doc.createElement('style');
+		TAG.type = 'text/css';
+		if ( TAG.styleSheet ){
+			TAG.styleSheet.cssText = CSS;
+		} else {
+			TAG.appendChild( doc.createTextNode( CSS ) );
+		};		
+		
+	};
 	
 	$('#feed').rssfeed( feed , {
 	    ssl: feed_ssl,
