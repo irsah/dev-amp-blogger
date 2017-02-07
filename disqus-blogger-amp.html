@@ -19,12 +19,13 @@ html,body {
 }
 	
 a , a:link { 
-	color:#06c;
+	color: #06c;
+	text-decoration: none;
 }
 #feed { 
 	overflow-x : hidden;
 	overflow-y : auto;
-	max-height: 680px;
+	height: 600px;
 }
 	
 #feed , .entryWrapper { 
@@ -51,19 +52,21 @@ a , a:link {
 }
 	
 h4 {
-	font-weight: 700%;
+	font-weight: 500;
 	margin : 0;
 	padding : 0;
 }
 	
 .entryDate {
-	font-size : 85%;
+	font-size : 80%;
 	display : block;
 	margin : 15px 0;
+	opacity : .87;
 }
 
 .entryContent {
-	font-size: 80%;
+	font-size: 85%;
+	opacity : .87;
 }
 </style>    
 
@@ -230,10 +233,8 @@ function loadFeed(){
 	    // optional callback function
 	});
 	
-	$('#feed').css({
-		'height' : feed_height +'px',
-		'max-height' : feed_height +'px',
-	});
+	$('#feed').height( feed_height )
+
 };
 
 
