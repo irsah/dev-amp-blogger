@@ -72,18 +72,19 @@ function loadMessage(){
 	( doc.getElementsByTagName('head')[0] || doc.getElementsByTagName('body')[0] ).appendChild( H3 )
 };
 
+var pagetype = getQueryValue('pagetype');
+if ( pagetype === false ) pagetype = 'item';
+var disqus_shortname = getQueryValue('shortname');
+var disqus_blogger_current_url = getQueryValue('canonicalurl');
+if ( !disqus_blogger_current_url.length ) {
+  disqus_blogger_current_url = getQueryValue('url');
+};
+var disqus_blogger_homepage_url = getQueryValue('homepageurl');
+var disqus_blogger_canonical_homepage_url = getQueryValue('canonicalhomepageurl');	
 	
 /* loads Disqus js */
 function loadDisqus(){ 
-	var pagetype = getQueryValue('pagetype');
-	if ( pagetype === false ) pagetype = 'item';
-	var disqus_shortname = getQueryValue('shortname');
-	var disqus_blogger_current_url = getQueryValue('canonicalurl');
-	if ( !disqus_blogger_current_url.length ) {
-	  disqus_blogger_current_url = getQueryValue('url');
-	};
-	var disqus_blogger_homepage_url = getQueryValue('homepageurl');
-	var disqus_blogger_canonical_homepage_url = getQueryValue('canonicalhomepageurl');	
+
 	var fontfamily = getQueryValue( 'fontfamily' ) === false ? 'sans-serif': getQueryValue( 'fontfamily' );
 	var fontlinkcolor = getQueryValue( 'fontlinkcolor') === false ? '000000' : getQueryValue( 'fontlinkcolor') ;
 	var disquscss = '#disqus_thread { font-family:' + fontfamily + '} a { color: #' + fontlinkcolor + '}',
