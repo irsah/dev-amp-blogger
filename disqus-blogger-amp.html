@@ -22,7 +22,9 @@ a , a:link {
 	color:#06c;
 }
 #feed { 
-	overflow : hidden;
+	overflow-x : hidden;
+	overflow-y : auto;
+	max-height: 680px;
 }
 	
 #feed , .entryWrapper { 
@@ -227,13 +229,11 @@ function loadFeed(){
 	}, function () {
 	    // optional callback function
 	});
-	var fheight = $('#feed').height();
-	if ( fheight > feed_height){
-		$('#feed').css({
-			'height' : feed_height +'px',
-			'overflow-y' : 'auto'
-		});
-	};
+	
+	$('#feed').css({
+		'height' : feed_height +'px',
+		'max-height' : feed_height +'px',
+	});
 };
 
 
