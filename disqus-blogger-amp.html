@@ -150,7 +150,7 @@ switch ( actions ){
 					yt2 = image_url.lastIndexOf('/'),
 					yt3 = image_url.substring( yt1+4 , yt2 );
 					image_url = '//i.ytimg.com/vi/' + yt3 + '/sddefault.jpg';
-				} else ( image_url.indexOf('img.youtube') !== -1 ){
+				} else if ( image_url.indexOf('img.youtube') !== -1 ){
 					var yt4 = image_url.indexOf('/vi/'),
 					yt5 = image_url.lastIndexOf('/'),
 					yt6 = image_url.substring( yt4+4 , yt5);
