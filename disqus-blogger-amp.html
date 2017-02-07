@@ -184,10 +184,9 @@ function loadDisqus(){
 };
 	
 function loadFeed(){
-	if ( typeof(jQuery) === 'undefined' ){
-		loadScript('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
-		loadScript('https://rawgit.com/bbClassic/YRSS/master/yrss.min.js');
-	};
+
+	loadScript('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
+
 	var feed = getQueryValue('canonicalhomepageurl') +'feeds/posts/default?alt=rss';
 	var feed_ssl = getQueryValue('feedssl') === false ? true : false;
 	var feed_limit = getQueryValue('feedlimit') === false ? 5 : parseFloat( getQueryValue('feedlimit') );
@@ -201,6 +200,8 @@ function loadFeed(){
 	var feed_snippet_limit = getQueryValue('feedsnippetlimit') === false ? 160 : parseFloat( getQueryValue('feedsnippetlimit') );
 	var feed_link_target = getQueryValue('feedlinktarget') === false ? '_blank' : getQueryValue('feedlinktarget');
 	var feed_height = getQueryValue('feedcontainerheight') === false ? 600 : parseFloat( getQueryValue('feedcontainerheight') );
+	
+	loadScript('https://rawgit.com/bbClassic/YRSS/master/yrss.min.js');
 	
 	$('#feed').rssfeed( feed , {
 	    ssl: feed_ssl,
