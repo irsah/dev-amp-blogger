@@ -129,7 +129,7 @@ function receiveMessage( event ) {
 	};    
 };
 
-var parseQueryString = function( queryString ) {
+var parseStrings = function( queryString ) {
     var params = {}, queries, temp, i, l;
     queries = queryString.split("&amp;");
     for ( i = 0, l = queries.length; i < l; i++ ) {
@@ -139,7 +139,10 @@ var parseQueryString = function( queryString ) {
     return params;
 };
 
-var $GET = parseQueryString( win.location.search.substring(1) )
+if ( win.location.indexOf('?') != -1){
+	var $GET = {}:
+	$GET = parseStrings( win.location.search.substring(1) )
+}
 
 function getQueryValue( vars ) {
 	var query = win.location.search.substring(1);
@@ -156,7 +159,7 @@ function getQueryValue( vars ) {
 function loadMessage(){
 	var H3 = doc.createElement('h3');
 	H3.innerHTML = 'No contents available.'
-	doc.getElementsByTagName('body')[0].appendChild( H3 )
+	doc.getElementById('comments').appendChild( H3 )
 };
 
 function loadJs( scripts, index, loaded ) {
