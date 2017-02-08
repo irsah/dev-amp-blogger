@@ -168,8 +168,7 @@ function loadJs( scripts, index, loaded ) {
 	 };
 };
 	
-var pagetype;	
-if ( $_GET('pagetype') === false ) pagetype = 'item';
+var pagetype = $_GET('pagetype') === false ? 'item' : $_GET('pagetype');
 var disqus_shortname = $_GET('shortname');
 var disqus_blogger_current_url = $_GET('canonicalurl');
 if ( disqus_blogger_current_url === false ) {
@@ -191,7 +190,7 @@ function loadStyles(){
 	} else {
 		TAG.appendChild( doc.createTextNode( CSS ) );
 	};	
-	HEAD.appendChild( tag );
+	HEAD.appendChild( TAG );
 }
 	
 /* loads Disqus js */
