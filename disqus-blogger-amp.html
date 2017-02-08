@@ -248,7 +248,7 @@ function loadFbComments(){
 	var FB =  doc.getElementById('fb-comments-wrapper');
 	FB.setAttribute( 'data-numposts', $_GET('fbnumposts') === false ? 10 : parseFloat( $_GET('fborderby') )  );
 	FB.setAttribute( 'data-href', $_GET('canonicalurl') );
-	FB.setAttribute( 'data-width', $_GET('fbwidth') === false ? 'social' : $_GET('fborderby')  );
+	FB.setAttribute( 'data-width', $_GET('fbwidth') === false ? 600 : parseFloat( $_GET('fborderby') )  );
 	FB.setAttribute( 'data-order-by', $_GET('fborderby') === false ? 'social' : $_GET('fborderby') );
 	
 	var appID = $_GET('fbappid') === false ? false : parseFloat( $_GET('fbappid') );
