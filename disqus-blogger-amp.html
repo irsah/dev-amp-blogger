@@ -138,11 +138,11 @@ var parseStrings = function( queryString ) {
     }
     return params;
 };
-
+	
+var $GET = {};
 if ( win.location.indexOf('?') != -1){
-	var $GET = {}:
 	$GET = parseStrings( win.location.search.substring(1) )
-}
+};
 
 function getQueryValue( vars ) {
 	var query = win.location.search.substring(1);
