@@ -3,6 +3,24 @@
 <head>
 <meta charset=utf-8>
 <style>
+::-webkit-scrollbar { -webkit-appearance: none; } 
+::-webkit-scrollbar:vertical { width: 8px; } 
+::-webkit-scrollbar:horizontal { height: 8px; } 
+::-webkit-scrollbar-thumb { 
+	background-color: #aaaaaa; 
+	border-radius: 8px; border: 4px solid rgba(255,255,255,.15); 
+} 
+::-webkit-scrollbar-track { 
+	border-radius: 100%; 
+	background-color: rgba(255,255,255,.15); 
+} 
+.clearfix { 
+	display:table; 
+	height:0; 
+	width:100%; 
+	clear:both; 
+	visibility: hidden; 
+} 
 html, body {
 	-webkit-font-smoothing: antialiased;
 	-webkit-text-size-adjust: 100%;
@@ -14,7 +32,6 @@ html, body {
 	color : #333;
 	font-size: 16px;
 }
-	
 a , a:link { 
 	color: #06c;
 	text-decoration: none;
@@ -24,57 +41,57 @@ a , a:link {
 	overflow-x: hidden;
 }		
 .feeds { 
-  list-style : none;
-  padding : 0;
-  margin : 0;
-  color: inherit;
+	list-style : none;
+	padding : 0;
+	margin : 0;
+	color: inherit;
 }
-
 .feed a {
-  color: inherit;
+	color: inherit;
 }
 .feed {
-  display : block;
-  padding : 15px 0;
-  margin : 0;
-  border-bottom: 1px solid #eeeeee;
+	display : block;
+	padding : 15px 0;
+	margin : 0;
+	border-bottom: 1px solid #eeeeee;
 }
 .feed:after {
-  content: " ";
-  clear : both;
-  display : table;
-  height : 0;
-  visibility : hidden;
+	content: " ";
+	clear : both;
+	display : table;
+	height : 0;
+	visibility : hidden;
 }
 .feed img {
-  display : block;
-  max-width : 100%;
-  height : auto;
+	display : block;
+	max-width : 100%;
+	height : auto;
 }
 .feed-image {
-  display : inline-block;
-  float:left;
-  width: 33%;
-  margin: 0;
-  border: 1px solid #eeeeee;
+	display : inline-block;
+	float:left;
+	width: 33%;
+	margin: 0;
+	border: 1px solid #eeeeee;
 }
 .feed-caption {
-  display : table-cell;
-  padding : 0 15px;
+	display : table-cell;
+	padding : 0 15px;
 }
 .feed h4 {
-  display : block;
-  margin: 0 0 10px;
-  font-weight: 500;
+	display : block;
+	margin: 0 0 10px;
+	font-weight: 500;
 }
 .feed-date {
-  opacity: .87;
-  font-size: 80%;
-  margin-bottom: 10px;
+	opacity: .87;
+	font-size: 80%;
+	margin-bottom: 10px;
 }
 .feed-caption p {
-  opacity: .87;
-  font-size: 85%;
+	opacity: .87;
+	font-size: 85%;
+	margin : 0;
 }
 </style>    
 
