@@ -18,6 +18,10 @@ a , a:link {
 	color: #06c;
 	text-decoration: none;
 }
+#feeder { 
+	overflow-y: auto;
+	overflow-x: hidden;
+}		
 .feeds { 
   list-style : none;
   padding : 0;
@@ -231,7 +235,7 @@ function loadFeed(){
 		errormsg: $_GET('feederrormsg') === false ? '' : $_GET('feederrormsg')
 	}, function () {
 	    // optional callback function
-		$('#feed').height( feed_height )
+		$('#feeder').height( feed_height )
 	});
 };
 
