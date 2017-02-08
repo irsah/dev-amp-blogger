@@ -140,7 +140,7 @@ var parseStrings = function( queryString ) {
 };
 	
 var $GET = {};
-if ( win.location.indexOf('?') != -1){
+if ( win.location.href.indexOf('?') != -1){
 	$GET = parseStrings( win.location.search.substring(1) )
 };
 
