@@ -190,6 +190,7 @@ function loadStyles(){
 /* loads Disqus js */
 function loadDisqus(){ 
 	doc.getElementById('feed').parentNode.removeChild( doc.getElementById('feed') );
+	loadStyles();
 	var HEAD = doc.getElementsByTagName('head')[0];
 	var js = doc.createElement('script');
 	js.type = 'text/javascript';
@@ -199,8 +200,8 @@ function loadDisqus(){
 };
 	
 function loadFeed(){
-
 	if( $_GET('canonicalhomepageurl') === false ) return false;
+	loadStyles();
 	var feed = $_GET('canonicalhomepageurl') + 'feeds/posts/default?alt=rss';
 	var feed_ssl = $_GET('feedssl') === false ? true : false;
 	var feed_limit = $_GET('feedlimit') === false ? 5 : parseFloat( $_GET('feedlimit')  );
