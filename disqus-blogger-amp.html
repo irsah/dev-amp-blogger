@@ -80,9 +80,10 @@ a , a:link {
 
 </head>
 <body>
-
+<div id="fb-root"></div>
 <div id="feeder"></div>
 <div id="comments"></div>
+<div id="fb-comments-wrapper" class="fb-comments"></div>
 	
 <script>
 /*
@@ -242,13 +243,33 @@ function loadFeed(){
 	});
 };
 
+function loadFbComments(){
+	if( $_GET('canonicalurl') === false ) return (false);
+	var FB =  doc.getElementById('fb-comments-wrapper');
+	FB.setAttribute( 'data-numposts', $_GET('fbnumposts') === false ? 10 : parseFloat( $_GET('fborderby') )  );
+	FB.setAttribute( 'data-href', $_GET('canonicalurl') );
+	FB.setAttribute( 'data-width', $_GET('fbwidth') === false ? 'social' : $_GET('fborderby')  );
+	FB.setAttribute( 'data-order-by', $_GET('fborderby') === false ? 'social' : $_GET('fborderby') );
+	
+	var appID = $_GET('fbappid') === false ? false : parseFloat( $_GET('fbappid') );
+	if( appID === false ) return (false);
+	(function(d, s, id, appID) {
+		if (typeof(appID) === undefined && appID.length < 15 && typeof(appID) === NaN) return (false);
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s); js.id = id;
+		js.src = '//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=' + appID;
+		fjs.parentNode.insertBefore(js, fjs);
+	}(doc, 'script', 'facebook-jssdk', FB_APP_ID ));	
+};
+	
 var scripts = [];
 scripts.push('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
 
 var actions = $_GET('ampactions');
-
 switch ( actions ){
 	case 'disqus' : loadDisqus(); break;
+	case 'fbcomments' : loadFbComments(); break;
 	case 'feed' : 
 		loadJs( scripts , 0 , function(){ 
 			!function(a){"use strict";function b(a){for(var b,c,d=a.length;0!==d;)c=Math.floor(Math.random()*d),d-=1,b=a[d],a[d]=a[c],a[c]=b;return a}function c(a){var b;if(a.indexOf("<img")===-1&&a.indexOf("<amp-img")===-1)return b=options.default.image;var c=a.indexOf("<img");c===-1&&(c=a.indexOf("<amp-img"));var d=a.indexOf('src="',c),e=a.indexOf('"',d+5),b=a.substring(d+5,e);return b.length||(b=options.default.image),b}a.fn.YahooRSS=function(b,c,e){var f={random:!0,ssl:!1,limit:20,results:3,image:!0,default_image:"//4.bp.blogspot.com/-MowVHfLkoZU/VhgIRyPbIoI/AAAAAAAATtE/qHST4Q2YCCc/s1600/placeholder-image.jpg",labels:!0,date:"ddmmyy",datesep:" ",months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],summary:!0,chars:160,target:"_self",showerror:!0,errormsg:""};return c=a.extend(f,c),this.each(function(f,g){var h="";if(c.ssl&&(h="s"),a(g).hasClass("feed-rss")||a(g).addClass("feed-rss"),null===b)return!1;if(c.limit<=0)return!1;var i="http"+h+"://query.yahooapis.com/v1/public/yql?q="+encodeURIComponent('select * from feed where url="'+b+'"');null!==c.limit&&(i+=" limit "+c.limit),i+="&format=json",a.getJSON(i,function(b,f,h){if("success"===f)d(g,b,c),a.isFunction(e)&&e.call(this,a(g));else if("error"===f||"parsererror"===f){if(!c.showerror)return!1;var i;i=""!==c.errormsg?c.errormsg:h,a(g).html('<div class="feed-rss-error"><p>'+i+"</p></div>")}})})};var d=function(d,e,f){var g=e.query.results.item;if(a.isArray(g)||(g=[g]),!g)return!1;f.random&&b(g);var h=a("<ul/>").attr({class:"feeds"});a.each(g,function(b,d){if(b>f.results-1)return!1;var i,j,k,e=g[b],l=a("<li/>").attr({class:"feed"}),m=a("<div/>").attr({class:"feed-image"}),n=a("<div/>").attr({class:"feed-caption"});if(k=void 0!==e.description?e.description:e.encoded,f.image){var o=a("<img/>").attr("src",c(k));l.append(m.append(o))}if(e.pubDate){var p=new Date(e.pubDate),q=p.getDate().toString(),r=p.getMonth(),s=p.getFullYear(),t=f.datesep,u=f.months;if(a.isArray(u)&&12===u.length)var r=u[p.getMonth()];switch(f.date){case"mmddyy":j=r+""+t+q+t+s;break;case"ddmmyy":j=q+""+t+r+t+s;break;case"yymmdd":j=s+""+t+r+t+q;break;case"yyddmm":j=s+""+t+q+t+r;break;case"localedate":j=p.toLocaleDateString();break;case"localedatetime":j=p.toLocaleDateString()+" "+p.toLocaleTimeString()}}if(void 0!==e.category){for(var b=0;b<e.category.length;b++)i+=e.category[b].content+" ";f.labels&&void 0!==e.category&&l.attr({"data-labels":i})}var v=a("<h4/>").append(a("<a/>").attr({href:e.link,target:f.linktarget}).html(e.title));if(n.append(v),f.date&&j&&n.append(a("<div/>").attr({class:"feed-date"}).html(j)),f.summary||f.chars<=0){var w=/<\S[^>]*>/g;k=k.replace(w,""),k.length>f.chars&&(k=k.substring(0,k.lastIndexOf(" ",f.chars))+" ...");var x=a("<p/>").attr({class:"feed-summary"}).append(k);n.append(x)}l.append(n),l.appendTo(h)}),a(d).append(h)}}(jQuery);	
