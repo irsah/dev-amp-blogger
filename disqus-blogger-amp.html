@@ -196,7 +196,7 @@ function loadStyles(){
 	
 /* loads Disqus js */
 function loadDisqus(){ 
-	doc.getElementById('feeder').parentNode.removeChild( doc.getElementById('feed') );
+	doc.getElementById('feeder').parentNode.removeChild( doc.getElementById('feeder') );
 	loadStyles();
 	var HEAD = doc.getElementsByTagName('head')[0];
 	var js = doc.createElement('script');
