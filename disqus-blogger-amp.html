@@ -178,7 +178,7 @@ var pagetype;
 if ( $GET.pagetype === undefined ) pagetype = 'item';
 var disqus_shortname = $GET.shortname;
 var disqus_blogger_current_url = $GET.canonicalurl;
-if ( !disqus_blogger_current_url.length ) {
+if ( disqus_blogger_current_url === undefined ) {
   disqus_blogger_current_url = $GET.url;
 };	
 var disqus_blogger_homepage_url = $GET.homepageurl;
