@@ -169,36 +169,36 @@ if ( disqus_blogger_current_url === false ) {
   disqus_blogger_current_url = $_GET('url');
 };	
 var disqus_blogger_homepage_url = $_GET('homepageurl');
-var disqus_blogger_canonical_homepage_url = $_GET('canonicalhomepageurl');	
+var disqus_blogger_canonical_homepage_url = $_GET('canonicalhomepageurl');
+
+function loadStyles(){
+	var fontfamily = $_GET('fontfamily') === false ? 'sans-serif': $_GET('fontfamily');
+	var fontlinkcolor = $_GET('fontlinkcolor') === false ? '06c' : $_GET('fontlinkcolor');
+	var fontcolor = $_GET('fontcolor') === false ? '333333' : $_GET('fontcolor') ;
+	var CSS = 'body { font-family:' + fontfamily + '; color: #' + fontcolor + '; } a { color: #' + fontlinkcolor + '}';	var tag = doc.createElement('style');
+	var HEAD = doc.getElementsByTagName('head')[0];
+	var TAG = doc.createElement('style');
+	TAG.type = 'text/css';
+	if ( TAG.styleSheet ){
+		TAG.styleSheet.cssText = CSS;
+	} else {
+		TAG.appendChild( doc.createTextNode( CSS ) );
+	};	
+	HEAD.appendChild( tag );
+}
 	
 /* loads Disqus js */
 function loadDisqus(){ 
-	if ( $_GET('shortname') === false ) return false;
 	doc.getElementById('feed').parentNode.removeChild( doc.getElementById('feed') );
-	var fontfamily = $_GET('fontfamily') === false ? 'sans-serif': $_GET('fontfamily');
-	var fontlinkcolor = $_GET('fontlinkcolor') === false ? '000000' : $_GET('fontlinkcolor') ;
-	var disquscss = '#disqus_thread { font-family:' + fontfamily + '} a { color: #' + fontlinkcolor + '}';
-	var head = doc.getElementsByTagName('head')[0];
-	var tag = doc.createElement('style');
-	tag.type = 'text/css';
-	if ( tag.styleSheet ){
-  		tag.styleSheet.cssText = disquscss;
-	} else {
-  		tag.appendChild( doc.createTextNode( disquscss ) );
-	};
-	head.appendChild( tag );
-
-	if( pagetype === "item"){
-		var js = doc.createElement('script');
-		js.type = 'text/javascript';
-		js.async = true;
-		js.src = '//' + disqus_shortname + '.disqus.com/blogger_item.js';
-		doc.getElementsByTagName('head')[0].appendChild( js );
-	};
+	var HEAD = doc.getElementsByTagName('head')[0];
+	var js = doc.createElement('script');
+	js.type = 'text/javascript';
+	js.async = true;
+	js.src = '//' + disqus_shortname + '.disqus.com/blogger_item.js';
+	HEAD.appendChild( js );
 };
 	
 function loadFeed(){
-
 
 	if( $_GET('canonicalhomepageurl') === false ) return false;
 	var feed = $_GET('canonicalhomepageurl') + 'feeds/posts/default?alt=rss';
@@ -214,19 +214,6 @@ function loadFeed(){
 	var feed_snippet_limit = $_GET('feedsnippetlimit') === false ? 160 : parseFloat( $_GET('feedsnippetlimit') );
 	var feed_link_target = $_GET('feedlinktarget') === false ? '_blank' : $_GET('feedlinktarget');
 	var feed_height = $_GET('feedcontainerheight') === false ? 600 : parseFloat( $_GET('feedcontainerheight') );
-
-	if( $_GET('feedcss') !== false ){
-		var CSS = $_GET('feedcss');
-		var HEAD = doc.getElementsByTagName('head')[0];
-		var TAG = doc.createElement('style');
-		TAG.type = 'text/css';
-		if ( TAG.styleSheet ){
-			TAG.styleSheet.cssText = CSS;
-		} else {
-			TAG.appendChild( doc.createTextNode( CSS ) );
-		};		
-		
-	};
 	
 	$('#feed').rssfeed( feed , {
 	    ssl: feed_ssl,
