@@ -162,7 +162,7 @@ function loadJs( scripts, index, loaded ) {
 	if ( scripts[index] ) {
 		var files = doc.createElement('script');
 		files.type = 'text/javascript';
-		files = scripts[index];
+		files.src = scripts[index];
 		files.onload = function(){
 			index = index + 1;
 			loadJs( scripts, index, loaded )
