@@ -253,14 +253,14 @@ function loadFbComments(){
 	
 	var appID = $_GET('fbappid') === false ? false : parseFloat( $_GET('fbappid') );
 	if( appID === false ) return (false);
-	(function(d, s, id, appID) {
-		if (typeof(appID) === undefined && appID.length < 15 && typeof(appID) === NaN) return (false);
+	(function(d, s, id, ID) {
+		if (typeof(ID) === undefined && ID.length < 15 && typeof(ID) === NaN) return (false);
 		var js, fjs = d.getElementsByTagName(s)[0];
 		if (d.getElementById(id)) return;
 		js = d.createElement(s); js.id = id;
-		js.src = '//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=' + appID;
+		js.src = '//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=' + ID;
 		fjs.parentNode.insertBefore(js, fjs);
-	}(doc, 'script', 'facebook-jssdk', FB_APP_ID ));	
+	}(doc, 'script', 'facebook-jssdk', appID ));	
 };
 	
 var scripts = [];
