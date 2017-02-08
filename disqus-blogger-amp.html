@@ -47,7 +47,7 @@ a , a:link {
 	color: inherit;
 }
 .feed a {
-	color: inherit;
+	
 }
 .feed {
 	display : block;
@@ -103,16 +103,22 @@ a , a:link {
 	
 <script>
 /*
-# Title		:	Disqus Comments on Blogger AMP HTML Template
+# Title		:	Blogger AMP HTML Template Iframe Helpers
 # Ver		:	0.9.0
 # Date		:	Jan 2017
+# Last Mod	:	Feb 2017
 # Demo		:	https://blogr-amp.blogspot.com
 # Author	:	irsah.com
 #
-# Usages for Disqus:
+# EXAMPLE amp-iframe
 #
-<amp-iframe 
-	expr:src='&quot;{{PATH-TO-FILE}}?ampactions=disqus&amp;shortname={{DISQUS_SHORTNAME}}&amp;pagetype={{PAGE_TYPE}}&amp;fontfamily={{FONT_FAMILY}}&amp;fontlinkcolor={{LINK_COLOR}}&amp;canonicalurl=&quot; + data:blog.canonicalUrl + &quot;&amp;url=&quot; + data:blog.url + &quot;&amp;homepageurl=&quot; + data:blog.homepageUrl + &quot;&amp;canonicalhomepageurl=&quot; + data:blog.canonicalHomepageUrl' 
+<amp-iframe expr:src='&quot;{{PATH-TO-FILE}}
+	?ampactions={{ACTION_TYPE}}
+	&amp;canonicalurl=&quot; + data:blog.canonicalUrl + &quot;
+	&amp;url=&quot; + data:blog.url + &quot;
+	&amp;homepageurl=&quot; + data:blog.homepageUrl + &quot;
+	&amp;canonicalhomepageurl=&quot; + data:blog.canonicalHomepageUrl + &quot;
+	<[[ QUERY_STRINGS ]]>'
 	frameborder='0' 
 	height='400' 
 	layout='responsive' 
@@ -121,15 +127,48 @@ a , a:link {
 	width='600'>
 </amp-iframe>
 #
-# Instructions:
-# Copy paste <amp-iframe/> markup above & place anywhere at Blogger HTML within <body>...</body> tag.
-# [*] Replace {{PATH-TO-FILE}} to this file hosted on an HTTPS enabled host.
-# [*] Replace {{DISQUS_SHORTNAME}} with Disqus shortname created/attached to blog.
-# Replace {{ PAGETYPE }} with value " index " or " item " (without quotes). (default: item)
-# Replace {{FONT_FAMILY}} with CSS font family. (default: sans-serif)
-# Replace {{LINK_COLOR}} with HEX color code. (default: 000000)
+# USAGES:
+# Copy paste <amp-iframe /> markup above & place anywhere at Blogger HTML within <body>...</body> tag.
+# [*] Replace {{PATH-TO-FILE}} to the file hosted on an HTTPS enabled host.
+# Replace {{ACTION_TYPE}} to required output of iframe.
+# Add QUERY_STRINGS based on {{ACTION_TYPE}} available below
 #
-# [*] required values
+# ACTION TYPE - DISQUS:
+[*]	?ampactions=disqus
+[*]	&amp;shortname={{DISQUS_SHORTNAME}}
+	&amp;fontfamily={{FONT_FAMILY}}
+	&amp;fontcolor={{FONT_COLOR}}
+	&amp;fontlinkcolor={{LINK_COLOR}}
+#		
+# Replace {{DISQUS_SHORTNAME}} with Disqus shortname attached to blog.
+# Replace {{FONT_FAMILY}} with CSS font family - default: sans-serif.
+# Replace {{FONT_COLOR}} with CSS HEX color code - default: 333333.
+# Replace {{LINK_COLOR}} with HEX color code - default: 06c
+#
+# ACTION TYPE - RANDOM POSTS:
+[*]	?ampactions=feed
+	&amp;feedlimit={{FEED_LIMIT}}
+	&amp;feedresults={{FEED_RESULTS}}
+	&amp;feeddefaultimage={{PATH_TO_DEFAULT_IMAGE}}
+	&amp;feeddate={{DATES_IN_ARRAY}}
+	&amp;feeddatesep={{DATE_SEPARATOR}}
+	&amp;feedcontainerheight={{HEIGHT_IN_PX}}
+	&amp;feedchars={{SUMMARY_CHARS}}
+	&amp;feedtarget={{LINK_TARGET}}
+	&amp;fontfamily={{FONT_FAMILY}}
+	&amp;fontcolor={{FONT_COLOR_IN_HEX}}
+	&amp;fontlinkcolor={{LINK_COLOR_IN_HEX}}
+	&amp;canonicalurl=&quot; + data:blog.canonicalUrl + &quot;
+	&amp;url=&quot; + data:blog.url + &quot;
+	&amp;homepageurl=&quot; + data:blog.homepageUrl + &quot;
+	&amp;canonicalhomepageurl=&quot; + data:blog.canonicalHomepageUrl' 
+#	
+# ACTION TYPE - RANDOM POSTS (Optional to disable)
+	&amp;feedrandom=false
+	&amp;image=false	
+	&amp;feedsummary=false
+#
+[*] Required values. View DEMO for usages.
 #
 */
 
@@ -166,12 +205,6 @@ function $_GET( vars ) {
 	};
 	return (false);
 };
-  
-function loadMessage(){
-	var H3 = doc.createElement('h3');
-	H3.innerHTML = 'No contents available.'
-	doc.getElementById('comments').appendChild( H3 )
-};
 
 function loadJs( scripts, index, loaded ) {
 	if ( scripts[index] ) {
@@ -188,20 +221,11 @@ function loadJs( scripts, index, loaded ) {
 	 };
 };
 	
-var pagetype = $_GET('pagetype') === false ? 'item' : $_GET('pagetype');
-var disqus_shortname = $_GET('shortname');
-var disqus_blogger_current_url = $_GET('canonicalurl');
-if ( disqus_blogger_current_url === false ) {
-  disqus_blogger_current_url = $_GET('url');
-};	
-var disqus_blogger_homepage_url = $_GET('homepageurl');
-var disqus_blogger_canonical_homepage_url = $_GET('canonicalhomepageurl');
-
 function loadStyles(){
 	var fontfamily = $_GET('fontfamily') === false ? 'sans-serif': $_GET('fontfamily');
 	var fontlinkcolor = $_GET('fontlinkcolor') === false ? '06c' : $_GET('fontlinkcolor');
 	var fontcolor = $_GET('fontcolor') === false ? '333333' : $_GET('fontcolor') ;
-	var CSS = 'body, #disqus_thread { font-family:' + fontfamily + '; color: #' + fontcolor + '; } a, #disqus_thread a { color: #' + fontlinkcolor + '}';
+	var CSS = 'body, #disqus_thread, #comments { font-family:' + fontfamily + '; color: #' + fontcolor + '; } a, a:link, #comments a, #disqus_thread a { color: #' + fontlinkcolor + '}';
 	var HEAD = doc.getElementsByTagName('head')[0];
 	var TAG = doc.createElement('style');
 	TAG.type = 'text/css';
@@ -211,9 +235,18 @@ function loadStyles(){
 		TAG.appendChild( doc.createTextNode( CSS ) );
 	};	
 	HEAD.appendChild( TAG );
-}
+};
 	
 /* loads Disqus js */
+var pagetype = $_GET('pagetype') === false ? 'item' : $_GET('pagetype');
+var disqus_shortname = $_GET('shortname');
+var disqus_blogger_current_url = $_GET('canonicalurl');
+if ( disqus_blogger_current_url === false ) {
+  disqus_blogger_current_url = $_GET('url');
+};	
+var disqus_blogger_homepage_url = $_GET('homepageurl');
+var disqus_blogger_canonical_homepage_url = $_GET('canonicalhomepageurl');
+
 function loadDisqus(){ 
 	doc.getElementById('feeder').parentNode.removeChild( doc.getElementById('feeder') );
 	loadStyles();
@@ -226,10 +259,10 @@ function loadDisqus(){
 };
 	
 function loadFeed(){
-	if( $_GET('canonicalhomepageurl') === false ) return false;
+	if( $_GET('canonicalhomepageurl') === false ) return (false);
 	loadStyles();
 	var FEED = $_GET('canonicalhomepageurl') + 'feeds/posts/default?alt=rss';
-	var feed_default_image = $_GET('feeddefaultimage') === false ? '//4.bp.blogspot.com/-MowVHfLkoZU/VhgIRyPbIoI/AAAAAAAATtE/qHST4Q2YCCc/s1600/placeholder-image.jpg' : parseFloat( $_GET('feeddefaultimage')  );
+	var feed_default_image = $_GET('feeddefaultimage') === false ? '//4.bp.blogspot.com/-MowVHfLkoZU/VhgIRyPbIoI/AAAAAAAATtE/qHST4Q2YCCc/s1600/placeholder-image.jpg' : $_GET('feeddefaultimage');
 	var months = $_GET('feedmonths');
 	if( months !== false && months.indexOf(',') !== -1){
 		months = months.split(',');
@@ -271,7 +304,6 @@ switch ( actions ){
 			loadFeed() 
 		}); 
 	break;
-	default : console.log('Required data values unreachable.');
 };
 </script>
 
