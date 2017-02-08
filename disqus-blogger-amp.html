@@ -209,7 +209,7 @@ function loadDisqus(){
 	
 function loadFeed(){
 
-	var feed = $GET('canonicalhomepageurl') +'feeds/posts/default?alt=rss';
+	var feed = $GET.canonicalhomepageurl +'feeds/posts/default?alt=rss';
 	var feed_ssl = $GET.feedssl === false ? true : false;
 	var feed_limit = $GET.feedlimit === false ? 5 : parseFloat( $GET.feedlimit  );
 	var feed_tags = $GET.feedtags === false ? false : true;
