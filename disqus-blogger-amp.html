@@ -219,7 +219,7 @@ function loadFeed(){
 	var feed_link_target = $_GET('feedlinktarget') === false ? '_blank' : $_GET('feedlinktarget');
 	var feed_height = $_GET('feedcontainerheight') === false ? 600 : parseFloat( $_GET('feedcontainerheight') );
 
-	if( $GET.feedcss !== undefined ){
+	if( $_GET('feedcss') !== false ){
 		var CSS = $_GET('feedcss');
 		var HEAD = doc.getElementsByTagName('head')[0];
 		var TAG = doc.createElement('style');
