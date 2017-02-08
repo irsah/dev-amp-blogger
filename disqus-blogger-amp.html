@@ -173,11 +173,7 @@ var disqus_blogger_canonical_homepage_url = $_GET('canonicalhomepageurl');
 	
 /* loads Disqus js */
 function loadDisqus(){ 
-	if ( $_GET('shortname') === false 
-	    && $_GET('url') === false
-	    && $_GET('canonicalurl') === false
-	    && $_GET('homepageurl') === false
-	    && $_GET('canonicalhomepageurl') === false ) return false;
+	if ( $_GET('shortname') === false ) return false;
 	doc.getElementById('feed').parentNode.removeChild( doc.getElementById('feed') );
 	var fontfamily = $_GET('fontfamily') === false ? 'sans-serif': $_GET('fontfamily');
 	var fontlinkcolor = $_GET('fontlinkcolor') === false ? '000000' : $_GET('fontlinkcolor') ;
