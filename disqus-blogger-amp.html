@@ -57,6 +57,10 @@ a , a:link {
   display : table-cell;
   padding : 0 15px;
 }
+.feed h4 {
+  display : block;
+  margin: 0 0 10px;
+}
 .feed-date {
   opacity: .87;
   font-size: 85%;
@@ -174,7 +178,7 @@ function loadStyles(){
 	var fontfamily = $_GET('fontfamily') === false ? 'sans-serif': $_GET('fontfamily');
 	var fontlinkcolor = $_GET('fontlinkcolor') === false ? '06c' : $_GET('fontlinkcolor');
 	var fontcolor = $_GET('fontcolor') === false ? '333333' : $_GET('fontcolor') ;
-	var CSS = 'body, #disqus_thread { font-family:' + fontfamily + '; color: #' + fontcolor + '; } a, #disqus_thread a { color: #' + fontlinkcolor + '}';	var tag = doc.createElement('style');
+	var CSS = 'body, #disqus_thread { font-family:' + fontfamily + '; color: #' + fontcolor + '; } a, #disqus_thread a { color: #' + fontlinkcolor + '}';
 	var HEAD = doc.getElementsByTagName('head')[0];
 	var TAG = doc.createElement('style');
 	TAG.type = 'text/css';
@@ -188,7 +192,7 @@ function loadStyles(){
 	
 /* loads Disqus js */
 function loadDisqus(){ 
-	doc.getElementById('feed').parentNode.removeChild( doc.getElementById('feed') );
+	doc.getElementById('feeder').parentNode.removeChild( doc.getElementById('feed') );
 	loadStyles();
 	var HEAD = doc.getElementsByTagName('head')[0];
 	var js = doc.createElement('script');
