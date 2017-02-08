@@ -21,7 +21,6 @@ a , a:link {
 #feed { 
 	overflow-x : hidden;
 	overflow-y : auto;
-	height: 600px;
 }
 	
 #feed , .entryWrapper { 
@@ -129,22 +128,7 @@ function receiveMessage( event ) {
 	};    
 };
 
-var parseStrings = function( queryString ) {
-    var params = {}, queries, temp, i, l;
-    queries = queryString.split('&');
-    for ( i = 0, l = queries.length; i < l; i++ ) {
-        temp = queries[i].split('=');
-        params[temp[0]] = decodeURIComponent( temp[1].replace(/\+/g, " ") );
-    }
-    return params;
-};
-	
-var $GET = {};
-if ( win.location.href.indexOf('?') != -1){
-	$GET = parseStrings( win.location.search.substring(1) )
-};
-
-function getQueryValue( vars ) {
+function $_GET( vars ) {
 	var query = win.location.search.substring(1);
 	var variable = query.split('&');
 	for (var i = 0; i < variable.length; i++) {
@@ -178,25 +162,25 @@ function loadJs( scripts, index, loaded ) {
 };
 	
 var pagetype;	
-if ( $GET.pagetype === undefined ) pagetype = 'item';
-var disqus_shortname = $GET.shortname;
-var disqus_blogger_current_url = $GET.canonicalurl;
-if ( disqus_blogger_current_url === undefined ) {
-  disqus_blogger_current_url = $GET.url;
+if ( $_GET('pagetype') === false ) pagetype = 'item';
+var disqus_shortname = $_GET('shortname');
+var disqus_blogger_current_url = $_GET('canonicalurl');
+if ( disqus_blogger_current_url === false ) {
+  disqus_blogger_current_url = $_GET('url');
 };	
-var disqus_blogger_homepage_url = $GET.homepageurl;
-var disqus_blogger_canonical_homepage_url = $GET.canonicalhomepageurl;	
+var disqus_blogger_homepage_url = $_GET('homepageurl');
+var disqus_blogger_canonical_homepage_url = $_GET('canonicalhomepageurl');	
 	
 /* loads Disqus js */
 function loadDisqus(){ 
-	if ( $GET.shortname === undefined 
-	    && $GET.url === undefined
-	    && $GET.canonicalurl === undefined
-	    && $GET.homepageurl === undefined
-	    && $GET.canonicalhomepageurl == undefined ) return false;
+	if ( $_GET('shortname') === false 
+	    && $_GET('url') === false
+	    && $_GET('canonicalurl') === false
+	    && $_GET('homepageurl') === false
+	    && $_GET('canonicalhomepageurl') === false ) return false;
 	doc.getElementById('feed').parentNode.removeChild( doc.getElementById('feed') );
-	var fontfamily = $GET.fontfamily === false ? 'sans-serif': $GET.fontfamily;
-	var fontlinkcolor = $GET.fontlinkcolor === false ? '000000' : $GET.fontlinkcolor ;
+	var fontfamily = $_GET('fontfamily') === false ? 'sans-serif': $_GET('fontfamily');
+	var fontlinkcolor = $_GET('fontlinkcolor') === false ? '000000' : $_GET('fontlinkcolor') ;
 	var disquscss = '#disqus_thread { font-family:' + fontfamily + '} a { color: #' + fontlinkcolor + '}';
 	var head = doc.getElementsByTagName('head')[0];
 	var tag = doc.createElement('style');
@@ -220,23 +204,23 @@ function loadDisqus(){
 function loadFeed(){
 
 
-	if( $GET.canonicalhomepageurl === undefined ) return false;
-	var feed = $GET.canonicalhomepageurl + 'feeds/posts/default?alt=rss';
-	var feed_ssl = $GET.feedssl === undefined ? true : false;
-	var feed_limit = $GET.feedlimit === undefined ? 5 : parseFloat( $GET.feedlimit  );
-	var feed_tags = $GET.feedtags === undefined ? false : true;
-	var feed_date = $GET.feeddate === undefined ? true : false;
-	var feed_date_format = $GET.feeddateformat === undefined ? 'spellmonth' : $GET.feeddateformat;
-	var feed_title = $GET.feedtitletag === undefined ? 'h4' : $GET.feedtitletag;
-	var feed_content = $GET.feedcontent === undefined ? true : false;
-	var feed_image = $GET.feedimage === undefined ? true : false;
-	var feed_snippet = $GET.feedsnippet === undefined ? true : false;
-	var feed_snippet_limit = $GET.feedsnippetlimit === undefined ? 160 : parseFloat( $GET.feedsnippetlimit );
-	var feed_link_target = $GET.feedlinktarget === undefined ? '_blank' : $GET.feedlinktarget;
-	var feed_height = $GET.feedcontainerheight === undefined ? 600 : parseFloat( $GET.feedcontainerheight );
+	if( $_GET('canonicalhomepageurl') === false ) return false;
+	var feed = $_GET('canonicalhomepageurl') + 'feeds/posts/default?alt=rss';
+	var feed_ssl = $_GET('feedssl') === false ? true : false;
+	var feed_limit = $_GET('feedlimit') === false ? 5 : parseFloat( $_GET('feedlimit')  );
+	var feed_tags = $_GET('feedtags') === false ? false : true;
+	var feed_date = $_GET('feeddate') === false ? true : false;
+	var feed_date_format = $_GET('feeddateformat') === false ? 'spellmonth' : $_GET('feeddateformat');
+	var feed_title = $_GET('feedtitletag') === false ? 'h4' : $_GET('feedtitletag');
+	var feed_content = $_GET('feedcontent') === false ? true : false;
+	var feed_image = $_GET('feedimage') === false ? true : false;
+	var feed_snippet = $_GET('feedsnippet') === false ? true : false;
+	var feed_snippet_limit = $_GET('feedsnippetlimit') === false ? 160 : parseFloat( $_GET('feedsnippetlimit') );
+	var feed_link_target = $_GET('feedlinktarget') === false ? '_blank' : $_GET('feedlinktarget');
+	var feed_height = $_GET('feedcontainerheight') === false ? 600 : parseFloat( $_GET('feedcontainerheight') );
 
 	if( $GET.feedcss !== undefined ){
-		var CSS = $GET.feedcss;
+		var CSS = $_GET('feedcss');
 		var HEAD = doc.getElementsByTagName('head')[0];
 		var TAG = doc.createElement('style');
 		TAG.type = 'text/css';
@@ -275,12 +259,12 @@ var scripts = [];
 scripts.push('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
 scripts.push('https://rawgit.com/bbClassic/YRSS/master/yrss.min.js');
 
-var actions = $GET.ampactions;
+var actions = $_GET('ampactions');
 
 switch ( actions ){
 	case 'disqus' : loadDisqus(); break;
 	case 'feed' : loadJs( scripts , 0 , function(){ loadFeed() }); break;
-	default : loadMessage();
+	default : console.log('Required data values unreachable.');
 };
 </script>
 	
