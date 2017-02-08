@@ -2,12 +2,8 @@
 <html>
 <head>
 <meta charset=utf-8>
-<!--
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="//rawgit.com/bbClassic/YRSS/master/yrss.min.js"></script>
--->
 <style>
-html,body {
+html, body {
 	-webkit-font-smoothing: antialiased;
 	-webkit-text-size-adjust: 100%;
 	font-size : 100%;
@@ -50,7 +46,10 @@ a , a:link {
 	max-width : 100%; 
 	height : auto; 
 }
-	
+.entryText {
+	display : table-cell;
+}
+
 h4 {
 	font-weight: 500;
 	margin : 0;
@@ -74,7 +73,6 @@ h4 {
 <body>
 
 <div id="feed"></div>
-
 <div id="comments"></div>
 	
 <script>
@@ -116,21 +114,32 @@ win.addEventListener('message', receiveMessage, false);
   
 function receiveMessage( event ) {
 	if ( event.data ) {
-  	var msg;
-  	try {
-    	msg = JSON.parse( event.data );
-  	} catch (err) {};
-  	if (!msg) return false;
- 		if ( msg.name === 'resize' ) {
-    	win.parent.postMessage({
-      	sentinel: 'amp',
-      	type: 'embed-size',
-      	height: msg.data.height
-    	}, '*');
-  	};
-  };    
+		var msg;
+		try {
+			msg = JSON.parse( event.data );
+		} catch (err) {};
+		if (!msg) return false;
+		if ( msg.name === 'resize' ) {
+			win.parent.postMessage({
+				sentinel: 'amp',
+				type: 'embed-size',
+				height: msg.data.height
+			}, '*');
+		};
+	};    
 };
 
+var $GET = function() {
+	var s = window.location.search.substr(1),
+	p = s.split(/\&/), l = p.length, kv, r = {};
+	if (l === 0) { return (false); }
+	while (l--) {
+		kv = p[l].split(/\=/);
+		r[kv[0]] = decodeURIComponent( kv[1] || '' ) || true ;
+	};
+	return r;
+}();
+	
 function getQueryValue( vars ) {
 	var query = win.location.search.substring(1);
 	var variable = query.split('&');
@@ -149,36 +158,35 @@ function loadMessage(){
 	doc.getElementsByTagName('body')[0].appendChild( H3 )
 };
 
-function loadJsFilesSequentially(scriptsCollection, startIndex, librariesLoadedCallback) {
-	if (scriptsCollection[startIndex]) {
-		var fileref = doc.createElement('script');
-		fileref.setAttribute("type","text/javascript");
-		fileref.setAttribute("src", scriptsCollection[startIndex]);
-		fileref.onload = function(){
-			startIndex = startIndex + 1;
-			loadJsFilesSequentially(scriptsCollection, startIndex, librariesLoadedCallback)
+function loadJs( scripts, index, loaded ) {
+	if ( scripts[index] ) {
+		var files = doc.createElement('script');
+		files.type = 'text/javascript';
+		files = scripts[index];
+		files.onload = function(){
+			index = index + 1;
+			loadJs( scripts, index, loaded )
 		};
-		doc.getElementsByTagName("head")[0].appendChild(fileref)
+		doc.getElementsByTagName("head")[0].appendChild( files )
 	 } else {
-		 librariesLoadedCallback();
+		loaded();
 	 };
 };
-	
-var pagetype = getQueryValue('pagetype');
-if ( pagetype === false ) pagetype = 'item';
-var disqus_shortname = getQueryValue('shortname');
-var disqus_blogger_current_url = getQueryValue('canonicalurl');
+var pagetype;	
+if ( $GET.pagetype === false ) pagetype = 'item';
+var disqus_shortname = $GET.shortname;
+var disqus_blogger_current_url = $GET.canonicalurl;
 if ( !disqus_blogger_current_url.length ) {
-  disqus_blogger_current_url = getQueryValue('url');
+  disqus_blogger_current_url = $GET.url;
 };
-var disqus_blogger_homepage_url = getQueryValue('homepageurl');
-var disqus_blogger_canonical_homepage_url = getQueryValue('canonicalhomepageurl');	
+var disqus_blogger_homepage_url = $GET.homepageurl;
+var disqus_blogger_canonical_homepage_url = $GET.canonicalhomepageurl;	
 	
 /* loads Disqus js */
 function loadDisqus(){ 
 	doc.getElementById('feed').parentNode.removeChild( doc.getElementById('feed') );
-	var fontfamily = getQueryValue( 'fontfamily' ) === false ? 'sans-serif': getQueryValue( 'fontfamily' );
-	var fontlinkcolor = getQueryValue( 'fontlinkcolor') === false ? '000000' : getQueryValue( 'fontlinkcolor') ;
+	var fontfamily = $GET.fontfamily === false ? 'sans-serif': $GET.fontfamily;
+	var fontlinkcolor = $GET.fontlinkcolor === false ? '000000' : $GET.fontlinkcolor ;
 	var disquscss = '#disqus_thread { font-family:' + fontfamily + '} a { color: #' + fontlinkcolor + '}';
 	var head = doc.getElementsByTagName('head')[0];
 	var tag = doc.createElement('style');
@@ -201,22 +209,22 @@ function loadDisqus(){
 	
 function loadFeed(){
 
-	var feed = getQueryValue('canonicalhomepageurl') +'feeds/posts/default?alt=rss';
-	var feed_ssl = getQueryValue('feedssl') === false ? true : false;
-	var feed_limit = getQueryValue('feedlimit') === false ? 5 : parseFloat( getQueryValue('feedlimit') );
-	var feed_tags = getQueryValue('feedtags') === false ? false : true;
-	var feed_date = getQueryValue('feeddate') === false ? true : false;
-	var feed_date_format = getQueryValue('feeddateformat') === false ? 'spellmonth' : getQueryValue('feeddateformat');
-	var feed_title = getQueryValue('feedtitletag') === false ? 'h4' : getQueryValue('feedtitletag');
-	var feed_content = getQueryValue('feedcontent') === false ? true : false;
-	var feed_image = getQueryValue('feedimage') === false ? true : false;
-	var feed_snippet = getQueryValue('feedsnippet') === false ? true : false;
-	var feed_snippet_limit = getQueryValue('feedsnippetlimit') === false ? 160 : parseFloat( getQueryValue('feedsnippetlimit') );
-	var feed_link_target = getQueryValue('feedlinktarget') === false ? '_blank' : getQueryValue('feedlinktarget');
-	var feed_height = getQueryValue('feedcontainerheight') === false ? 600 : parseFloat( getQueryValue('feedcontainerheight') );
-console.log( getQueryValue('feedcss') );
-	if( getQueryValue('feedcss') !== false ){
-		var CSS = getQueryValue('feedcss');
+	var feed = $GET('canonicalhomepageurl') +'feeds/posts/default?alt=rss';
+	var feed_ssl = $GET.feedssl === false ? true : false;
+	var feed_limit = $GET.feedlimit === false ? 5 : parseFloat( $GET.feedlimit  );
+	var feed_tags = $GET.feedtags === false ? false : true;
+	var feed_date = $GET.feeddate === false ? true : false;
+	var feed_date_format = $GET.feeddateformat === false ? 'spellmonth' : $GET.feeddateformat;
+	var feed_title = $GET.feedtitletag === false ? 'h4' : $GET.feedtitletag;
+	var feed_content = $GET.feedcontent === false ? true : false;
+	var feed_image = $GET.feedimage === false ? true : false;
+	var feed_snippet = $GET.feedsnippet === false ? true : false;
+	var feed_snippet_limit = $GET.feedsnippetlimit === false ? 160 : parseFloat( $GET.feedsnippetlimit );
+	var feed_link_target = $GET.feedlinktarget === false ? '_blank' : $GET.feedlinktarget;
+	var feed_height = $GET.feedcontainerheight === false ? 600 : parseFloat( $GET.feedcontainerheight );
+
+	if( $GET.feedcss !== false ){
+		var CSS = $GET.feedcss;
 		var HEAD = doc.getElementsByTagName('head')[0];
 		var TAG = doc.createElement('style');
 		TAG.type = 'text/css';
@@ -255,11 +263,11 @@ var scriptLibrary = [];
 scriptLibrary.push('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
 scriptLibrary.push('https://rawgit.com/bbClassic/YRSS/master/yrss.min.js');
 
-var actions = getQueryValue( 'ampactions' );
+var actions = $GET.ampactions;
 	
 switch ( actions ){
 	case 'disqus' : loadDisqus(); break;
-	case 'feed' : loadJsFilesSequentially( scriptLibrary, 0, function(){ loadFeed() }); break;
+	case 'feed' : loadJs( scripts , 0 , function(){ loadFeed() }); break;
 	default : loadMessage();
 };
 </script>
