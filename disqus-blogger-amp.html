@@ -175,7 +175,7 @@ function loadStyles(){
 	var fontfamily = $_GET('fontfamily') === false ? 'sans-serif': $_GET('fontfamily');
 	var fontlinkcolor = $_GET('fontlinkcolor') === false ? '06c' : $_GET('fontlinkcolor');
 	var fontcolor = $_GET('fontcolor') === false ? '333333' : $_GET('fontcolor') ;
-	var CSS = 'body, #disqus-thread { font-family:' + fontfamily + '; color: #' + fontcolor + '; } a, #disqus-thread a { color: #' + fontlinkcolor + '}';	var tag = doc.createElement('style');
+	var CSS = 'body, #disqus_thread { font-family:' + fontfamily + '; color: #' + fontcolor + '; } a, #disqus_thread a { color: #' + fontlinkcolor + '}';	var tag = doc.createElement('style');
 	var HEAD = doc.getElementsByTagName('head')[0];
 	var TAG = doc.createElement('style');
 	TAG.type = 'text/css';
