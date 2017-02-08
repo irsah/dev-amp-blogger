@@ -18,60 +18,59 @@ a , a:link {
 	color: #06c;
 	text-decoration: none;
 }
-#feed { 
-	overflow-x : hidden;
-	overflow-y : auto;
-}
-	
-#feed , .entryWrapper { 
-	display: block 
-}
-	
-.entryWrapper { 
-	overflow : hidden; 
-	padding-top : 15px; 
-	padding-bottom: 15px; 
-	border-bottom: 1px solid #ddd; 
-}
-.entryImage { 
-	display : inline-block; 
-	float : left; 
-	margin-right : 15px; 
-	width: 33%; 
-}
-	
-.entryImage img { 
-	display : block; 
-	max-width : 100%; 
-	height : auto; 
-}
-.entryText {
-	display : table-cell;
+.feeds { 
+  list-style : none;
+  padding : 0;
+  margin : 0;
+  color: inherit;
 }
 
-h4 {
-	font-weight: 500;
-	margin : 0;
-	padding : 0;
+.feed a {
+  color: inherit;
 }
-	
-.entryDate {
-	font-size : 80%;
-	display : block;
-	margin : 15px 0;
-	opacity : .87;
+.feed {
+  display : block;
+  padding : 15px 0;
+  margin : 0;
+  border-bottom: 1px solid #eeeeee;
 }
-
-.entryContent {
-	font-size: 85%;
-	opacity : .87;
+.feed:after {
+  content: " ";
+  clear : both;
+  display : table;
+  height : 0;
+  visibility : hidden;
+}
+.feed img {
+  display : block;
+  max-width : 100%;
+  height : auto;
+}
+.feed-image {
+  display : inline-block;
+  float:left;
+  width: 33%;
+  margin: 0;
+  border: 1px solid #eeeeee;
+}
+.feed-caption {
+  display : table-cell;
+  padding : 0 15px;
+}
+.feed-date {
+  opacity: .87;
+  font-size: 85%;
+  margin-bottom: 10px;
+}
+.feed-caption p {
+  opacity: .87;
 }
 </style>    
 
 </head>
 <body>
 
-<div id="feed"></div>
+<div id="feeder"></div>
 <div id="comments"></div>
 	
 <script>
@@ -202,55 +201,52 @@ function loadDisqus(){
 function loadFeed(){
 	if( $_GET('canonicalhomepageurl') === false ) return false;
 	loadStyles();
-	var feed = $_GET('canonicalhomepageurl') + 'feeds/posts/default?alt=rss';
-	var feed_ssl = $_GET('feedssl') === false ? true : false;
-	var feed_limit = $_GET('feedlimit') === false ? 5 : parseFloat( $_GET('feedlimit')  );
-	var feed_tags = $_GET('feedtags') === false ? false : true;
-	var feed_date = $_GET('feeddate') === false ? true : false;
-	var feed_date_format = $_GET('feeddateformat') === false ? 'spellmonth' : $_GET('feeddateformat');
-	var feed_title = $_GET('feedtitletag') === false ? 'h4' : $_GET('feedtitletag');
-	var feed_content = $_GET('feedcontent') === false ? true : false;
-	var feed_image = $_GET('feedimage') === false ? true : false;
-	var feed_snippet = $_GET('feedsnippet') === false ? true : false;
-	var feed_snippet_limit = $_GET('feedsnippetlimit') === false ? 160 : parseFloat( $_GET('feedsnippetlimit') );
-	var feed_link_target = $_GET('feedlinktarget') === false ? '_blank' : $_GET('feedlinktarget');
+	var FEED = $_GET('canonicalhomepageurl') + 'feeds/posts/default?alt=rss';
+	var feed_default_image = $_GET('feeddefaultimage') === false ? '//4.bp.blogspot.com/-MowVHfLkoZU/VhgIRyPbIoI/AAAAAAAATtE/qHST4Q2YCCc/s1600/placeholder-image.jpg' : parseFloat( $_GET('feeddefaultimage')  );
+	var months = $_GET('feedmonths');
+	if( months !== false && months.indexOf(',') !== -1){
+		months = months.split(',');
+	};
+	var feed_months = months === false ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] : months;
 	var feed_height = $_GET('feedcontainerheight') === false ? 600 : parseFloat( $_GET('feedcontainerheight') );
-	
-	$('#feed').rssfeed( feed , {
-	    ssl: feed_ssl,
-	    limit: feed_limit,
-	    showerror: true,
-	    errormsg: '',
-	    tags: feed_tags,
-	    date: feed_date,
-	    dateformat: feed_date_format,
-	    titletag: feed_title,
-	    content: feed_content,
-	    image: feed_image,
-	    snippet: feed_snippet,
-	    snippetlimit: feed_snippet_limit,
-	    linktarget: feed_link_target
+
+	$('#feeder').YahooRSS( FEED , {
+		random : $_GET('feedrandom') === false ? true : false,
+		ssl : $_GET('feedssl') === false ? true : false,
+		limit : $_GET('feedlimit') === false ? 5 : parseFloat( $_GET('feedlimit')  ),
+		image : $_GET('feedimage') === false ? true : parseFloat( $_GET('feedimage')  ),
+		default_image : feed_default_image,
+		labels : $_GET('feedlabels') === false ? false : true,
+		date : $_GET('feeddate') === false ? 'mmddyy' : $_GET('feeddate'),
+		datesep : $_GET('feeddatesep') === false ? ' ' : $_GET('feeddatesep'),
+		months : feed_months,
+		summary : $_GET('feedsummary') === false ? true : false,
+		chars : $_GET('feedchars') === false ? 160 : parseFloat( $_GET('feedchars') ),
+		target : $_GET('feedtarget') === false ? '_self' : $_GET('feedtarget'),
+		showerror: $_GET('feederror') === false ? true : false,
+		errormsg: $_GET('feederrormsg') === false ? '' : $_GET('feederrormsg')
 	}, function () {
 	    // optional callback function
+		$('#feed').height( feed_height )
 	});
-	
-	$('#feed').height( feed_height )
-
 };
-
 
 var scripts = [];
 scripts.push('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
-scripts.push('https://rawgit.com/bbClassic/YRSS/master/yrss.min.js');
 
 var actions = $_GET('ampactions');
 
 switch ( actions ){
 	case 'disqus' : loadDisqus(); break;
-	case 'feed' : loadJs( scripts , 0 , function(){ loadFeed() }); break;
+	case 'feed' : 
+		loadJs( scripts , 0 , function(){ 
+			!function(a){"use strict";function b(a){for(var b,c,d=a.length;0!==d;)c=Math.floor(Math.random()*d),d-=1,b=a[d],a[d]=a[c],a[c]=b;return a}function c(a){var b;if(a.indexOf("<img")===-1&&a.indexOf("<amp-img")===-1)return b=options.default.image;var c=a.indexOf("<img");c===-1&&(c=a.indexOf("<amp-img"));var d=a.indexOf('src="',c),e=a.indexOf('"',d+5),b=a.substring(d+5,e);return b.length||(b=options.default.image),b}a.fn.YahooRSS=function(b,c,e){var f={random:!1,ssl:!1,limit:5,image:!0,default_image:"//4.bp.blogspot.com/-MowVHfLkoZU/VhgIRyPbIoI/AAAAAAAATtE/qHST4Q2YCCc/s1600/placeholder-image.jpg",labels:!0,date:"ddmmyy",datesep:" ",months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],summary:!0,chars:160,target:"_self",showerror:!0,errormsg:""};return c=a.extend(f,c),this.each(function(f,g){var h="";if(c.ssl&&(h="s"),a(g).hasClass("feed-rss")||a(g).addClass("feed-rss"),null===b)return!1;if(c.limit<=0)return!1;var i="http"+h+"://query.yahooapis.com/v1/public/yql?q="+encodeURIComponent('select * from feed where url="'+b+'"');null!==c.limit&&(i+=" limit "+c.limit),i+="&format=json",a.getJSON(i,function(b,f,h){if("success"===f)d(g,b,c),a.isFunction(e)&&e.call(this,a(g));else if("error"===f||"parsererror"===f){if(!c.showerror)return!1;var i;i=""!==c.errormsg?c.errormsg:h,a(g).html('<div class="feed-rss-error"><p>'+i+"</p></div>")}})})};var d=function(d,e,f){var g=e.query.results.item;if(a.isArray(g)||(g=[g]),!g)return!1;f.random&&b(g);var h=a("<ul/>").attr({class:"feeds"});a.each(g,function(b){var e,i,j,d=g[b],k=a("<li/>").attr({class:"feed"}),l=a("<div/>").attr({class:"feed-image"}),m=a("<div/>").attr({class:"feed-caption"});if(j=void 0!==d.description?d.description:d.encoded,f.image){var n=a("<img/>").attr("src",c(j));k.append(l.append(n))}if(d.pubDate){var o=new Date(d.pubDate),p=o.getDate().toString(),q=o.getMonth(),r=o.getFullYear(),s=f.datesep,t=f.months;if(a.isArray(t)&&12===t.length)var q=t[o.getMonth()];switch(f.date){case"mmddyy":i=q+""+s+p+s+r;break;case"ddmmyy":i=p+""+s+q+s+r;break;case"yymmdd":i=r+""+s+q+s+p;break;case"yyddmm":i=r+""+s+p+s+q;break;case"localedate":i=o.toLocaleDateString();break;case"localedatetime":i=o.toLocaleDateString()+" "+o.toLocaleTimeString()}}if(void 0!==d.category){for(var b=0;b<d.category.length;b++)e+=d.category[b].content+" ";f.labels&&void 0!==d.category&&k.attr({"data-labels":e})}var u=a("<h4/>").append(a("<a/>").attr({href:d.link,target:f.linktarget}).html(d.title));if(m.append(u),f.date&&i&&m.append(a("<div/>").attr({class:"feed-date"}).html(i)),f.summary||f.chars<=0){var v=/<\S[^>]*>/g;j=j.replace(v,""),j.length>f.chars&&(j=j.substring(0,j.lastIndexOf(" ",f.chars))+" ...");var w=a("<p/>").attr({class:"feed-summary"}).append(j);m.append(w)}k.append(m),k.appendTo(h)}),a(d).append(h)}}(jQuery);	
+			loadFeed() 
+		}); 
+	break;
 	default : console.log('Required data values unreachable.');
 };
 </script>
-	
+
 </body>
 </html>
