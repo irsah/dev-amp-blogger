@@ -230,7 +230,7 @@ function loadStyles(){
 	
 	var HEAD = doc.getElementsByTagName('head')[0];
 	var bs = doc.createElement('link');
-	bs.setAttribute('rel','text/stylesheet');
+	bs.rel = "stylesheet";
 	bs.type= "text/css";
 	bs.href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";
 	bs.media = 'all';
@@ -375,12 +375,12 @@ function loadContactForm(){
 	
 	loadStyles();
 	FORM.style = 'display:block';
-	
+	/*
 	var js = doc.createElement('script');
 	js.src = "https://www.blogger.com/static/v1/widgets/3785855890-widgets.js";
 	js.type = "text/javascript";
 	doc.getElementsByTagName('head')[0].appendChild( js );
-	
+	*/
 	_WidgetManager._Init('//www.blogger.com/rearrange?blogID\x3d'+$_GET('blogid'),$_GET('canonicalUrl'), $_GET('blogid'));
 	_WidgetManager._RegisterWidget('_ContactFormView',new _WidgetInfo('ContactForm1','main', null, FORM, {
 	  'contactFormMessageSendingMsg': $_GET('contactsendingmsg'), 
@@ -412,7 +412,8 @@ function loadContactForm(){
 // add external libraries
 var scripts = [];
 scripts.push('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
-
+scripts.push('https://www.blogger.com/static/v1/widgets/3785855890-widgets.js');
+	
 // grab url action
 var actions = $_GET('ampactions');
 switch ( actions ){
@@ -424,7 +425,10 @@ switch ( actions ){
 			loadFeed(); 
 		}); 
 	break;
-	case 'contactform': loadContactForm(); 
+	case 'contactform': 
+		loadJs( scripts , 0 , function(){ 
+			loadContactForm();
+		}
 	break;
 };
 </script>
