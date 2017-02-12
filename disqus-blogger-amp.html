@@ -400,7 +400,7 @@ function loadContactForm(){
 	var check_div = setInterval(function() {
 		if( FORM.scrollHeight < body_height ){
 			var form_height = FORM.height ;
-			body_height = height;
+			body_height = form_height;
 			updateHeight( body_height );
 		} else {
 			updateHeight( body_height );
