@@ -141,23 +141,23 @@ img {
     <div class="form">
       <form class="form" name="contact-form">
         <div class='form-group'>
-          <label><data:contactFormNameMsg/></label>
+          <label>Name</label>
           <input class="contact-form-name form-control" id="ContactForm1_contact-form-name" name="name" type="text" value=""/>
         </div>
         <div class='form-group'>
-          <label><data:contactFormEmailMsg/></label>
+          <label>Email</label>
 	<input class="contact-form-email form-control" id="ContactForm1_contact-form-email" name="email" type="text" value=""/>
         </div>
         <div class='form-group'>
-          <label><data:contactFormMessageMsg/></label>
-        <textarea class="contact-form-email-message form-control" id="ContactForm1_contact-form-email-message" name="email-message" rows='5'/>
+          <label>Message</label>
+        <textarea class="contact-form-email-message form-control" id="ContactForm1_contact-form-email-message" name="email-message" rows='5'></textarea>
         </div>
         <div class="form-group">
           <input class="contact-form-button contact-form-button-submit btn btn-primary" id="ContactForm1_contact-form-submit" value="Send Message" type="button"/>
         </div>
         <div class="form-group">
-          <p class="contact-form-error-message" id="ContactForm1_contact-form-error-message"/>
-          <p class="contact-form-success-message" id="ContactForm1_contact-form-success-message"/>
+	  <p class="contact-form-error-message" id="ContactForm1_contact-form-error-message"></p>
+          <p class="contact-form-success-message" id="ContactForm1_contact-form-success-message"></p>
         </div>
       </form>
     </div>
@@ -228,15 +228,15 @@ function loadJs( scripts, index, loaded ) {
 function loadStyles(){
 	if( $_GET('canonicalhomepageurl') === false ) return (false);
 	
+	var HEAD = doc.getElementsByTagName('head')[0];
 	var bs = doc.createElement('link');
 	bs.setAttribute('rel','text/stylesheet');
 	bs.type= "text/css";
 	bs.href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";
+	bs.media = 'all';
 	HEAD.appendChild( bs );
 	
-	var styles = ['normal','normal','16','1.428','san-serif','3b3b3b']
-	var CSS = 'body, #disqus_thread { font: '+$_GET('fontstyle')+' '+$_GET('fontweight')+' '+$_GET('fontsize')+'px/'+$_GET('fontlineheight')+' '+$_GET('fontfamily')+'; color: #'+$_GET('fontcolor')+'; } a, #disqus_thread a { color: #'+$_GET('fontlinkcolor')+'; }';
-	var HEAD = doc.getElementsByTagName('head')[0];
+	var CSS = 'body, #disqus_thread { font: '+$_GET('fontstyle')+' '+$_GET('fontweight')+' '+$_GET('fontsize')+'px/'+$_GET('fontlineheight')+' '+$_GET('fontfamily')+'; color: #'+$_GET('fontcolor')+'; } a, #disqus_thread a { color: #'+$_GET('fontlinkcolor')+'; }';	
 	var TAG = doc.createElement('style');
 	TAG.type = 'text/css';
 	if ( TAG.styleSheet ){
