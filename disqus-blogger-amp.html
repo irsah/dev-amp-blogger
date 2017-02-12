@@ -205,7 +205,8 @@ function loadStyles(){
 	bs.type= "text/css";
 	bs.href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";
 	bs.media = 'all';
-	HEAD.appendChild( bs );
+	//HEAD.appendChild( bs );
+	HEAD.insertBefore( bs, HEAD.childNodes[0] )
 	
 	var CSS = 'body, #disqus_thread { font: '+$_GET('fontstyle')+' '+$_GET('fontweight')+' '+$_GET('fontsize')+'px/'+$_GET('fontlineheight')+' '+$_GET('fontfamily')+'; color: #'+$_GET('fontcolor')+'; } a, #disqus_thread a { color: #'+$_GET('fontlinkcolor')+'; }';	
 	var TAG = doc.createElement('style');
@@ -232,8 +233,7 @@ var disqus_blogger_canonical_homepage_url = $_GET('canonicalhomepageurl');
 function loadDisqus(){
 	
 	// remove unused div and load styles...
-	doc.getElementById('feeder').parentNode.removeChild( doc.getElementById('feeder') );
-	doc.getElementById('ContactForm1').parentNode.removeChild( doc.getElementById('ContactForm1') );
+	doc.getElementById('feeder').parentNode.removeChild( doc.getElementById('feeder') );	
 	loadStyles();
 	
 	// prep disqus script and load...
@@ -259,8 +259,7 @@ function loadFeed(){
 	if( $_GET('canonicalhomepageurl') === false ) return (false);
 	
 	// remove unused div and load styles
-	doc.getElementById('comments').parentNode.removeChild( doc.getElementById('comments') );
-	doc.getElementById('ContactForm1').parentNode.removeChild( doc.getElementById('ContactForm1') );
+	doc.getElementById('comments').parentNode.removeChild( doc.getElementById('comments') );	
 	loadStyles();
 	
 	// prep feed urls
