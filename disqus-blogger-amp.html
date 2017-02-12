@@ -3,56 +3,50 @@
 <head>
 <meta charset=utf-8>
 <style>
-::-webkit-scrollbar { -webkit-appearance: none; } 
-::-webkit-scrollbar:vertical { width: 8px; } 
-::-webkit-scrollbar:horizontal { height: 8px; } 
+::-webkit-scrollbar { 
+  -webkit-appearance: none; 
+} 
+::-webkit-scrollbar:vertical { 
+  width: 6px; 
+} 
+::-webkit-scrollbar:horizontal { 
+  height: 6px; 
+ } 
 ::-webkit-scrollbar-thumb { 
 	background-color: #aaaaaa; 
-	border-radius: 8px; border: 4px solid rgba(255,255,255,.15); 
+	border-radius: 6px; 
+	border: 3px solid rgba(255,255,255,.15); 
 } 
 ::-webkit-scrollbar-track { 
 	border-radius: 100%; 
 	background-color: rgba(255,255,255,.15); 
 } 
 .clearfix { 
-	display:table; 
-	height:0; 
-	width:100%; 
-	clear:both; 
+	display: table; 
+	height: 0; 
+	width: 100%; 
+	clear: both; 
 	visibility: hidden; 
-} 
-html, body {
-	-webkit-font-smoothing: antialiased;
-	-webkit-text-size-adjust: 100%;
-	font-size : 100%;
-	font-weight : 400;
-	height : 100%;
-	line-height: 1.428;
-	font-family : sans-serif, Helvetica, Arial;
-	color : #333;
-	font-size: 16px;
 }
-a , a:link { 
-	color: #06c;
-	text-decoration: none;
+ol , ul {
+	list-style : none;
+	padding : 0;
+	margin : 0;
 }
 #feeder { 
-	overflow-y: auto;
-	overflow-x: hidden;
+	overflow : auto;
 }		
 .feeds { 
 	list-style : none;
 	padding : 0;
 	margin : 0;
 	color: inherit;
-}
-.feed a {
-	
+	display: block;
 }
 .feed {
 	display : block;
-	padding : 15px 0;
-	margin : 0;
+	padding : 0 0 15px 0;
+	margin : 0 0 15px;
 	border-bottom: 1px solid #eeeeee;
 }
 .feed:after {
@@ -98,85 +92,87 @@ a , a:link {
 		display : none;
 	}
 }
+	
+/* Blogger CSS specific */
+img {
+	max-width: 100%;
+	height: auto;
+	margin: 0 auto;
+	display: block;
+}
+.separator > a {
+	margin-left:auto!important;
+	margin-right:auto!important;
+}
+#ContactForm1 {
+	display:none;
+}
+.contact-form-error-message-with-border, 
+.contact-form-success-message-with-border { 
+	display :block; 
+	text-align :center; 
+	background-color : rgba(0,0,0,.035); 
+} 
+.contact-form-success-message-with-border { 
+	background-color : transparent; 
+} 
+.contact-form-error-message-with-border img { 
+	display : inline-block; 
+	vertical-align : middle; 
+	margin : 15px 10px; 
+	width : 20px; 
+	height : 20px;
+}
+
 </style>    
 
 </head>
 <body>
 
+<!-- div for feed -->
 <div id="feeder"></div>
+
+<!-- div for disqus -->
 <div id="comments"></div>
+
+<!-- div contact form -->
+<div class="widget ContactForm" data-version="1" id="ContactForm1">
+  <div class="contact-form-widget">
+    <div class="form">
+      <form class="form" name="contact-form">
+        <div class='form-group'>
+          <label><data:contactFormNameMsg/></label>
+          <input class="contact-form-name form-control" id="ContactForm1_contact-form-name" name="name" type="text" value=""/>
+        </div>
+        <div class='form-group'>
+          <label><data:contactFormEmailMsg/></label>
+	<input class="contact-form-email form-control" id="ContactForm1_contact-form-email" name="email" type="text" value=""/>
+        </div>
+        <div class='form-group'>
+          <label><data:contactFormMessageMsg/></label>
+        <textarea class="contact-form-email-message form-control" id="ContactForm1_contact-form-email-message" name="email-message" rows='5'/>
+        </div>
+        <div class="form-group">
+          <input class="contact-form-button contact-form-button-submit btn btn-primary" id="ContactForm1_contact-form-submit" value="Send Message" type="button"/>
+        </div>
+        <div class="form-group">
+          <p class="contact-form-error-message" id="ContactForm1_contact-form-error-message"/>
+          <p class="contact-form-success-message" id="ContactForm1_contact-form-success-message"/>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 	
 <script>
 /*
-# Title		:	Blogger AMP HTML Template Iframe Helpers
-# Ver		:	0.9.0
-# Date		:	Jan 2017
-# Last Mod	:	Feb 2017
-# Demo		:	https://blogr-amp.blogspot.com
-# Author	:	irsah.com
-#
-# EXAMPLE amp-iframe
-#
-<amp-iframe expr:src='&quot;{{PATH-TO-FILE}}
-	?ampactions={{ACTION_TYPE}}
-	&amp;canonicalurl=&quot; + data:blog.canonicalUrl + &quot;
-	&amp;url=&quot; + data:blog.url + &quot;
-	&amp;homepageurl=&quot; + data:blog.homepageUrl + &quot;
-	&amp;canonicalhomepageurl=&quot; + data:blog.canonicalHomepageUrl + &quot;
-	<[[ QUERY_STRINGS ]]>'
-	frameborder='0' 
-	height='400' 
-	layout='responsive' 
-	resizable='resizable' 
-	sandbox='allow-forms allow-scripts allow-same-origin allow-modals allow-popups' 
-	width='600'>
-</amp-iframe>
-#
-# USAGES:
-# Copy paste <amp-iframe /> markup above & place anywhere at Blogger HTML within <body>...</body> tag.
-# [*] Replace {{PATH-TO-FILE}} to the file hosted on an HTTPS enabled host.
-# Replace {{ACTION_TYPE}} to required output of iframe.
-# Add QUERY_STRINGS based on {{ACTION_TYPE}} available below
-#
-# ACTION TYPE - DISQUS:
-[*]	?ampactions=disqus
-[*]	&amp;shortname={{DISQUS_SHORTNAME}}
-	&amp;fontfamily={{FONT_FAMILY}}
-	&amp;fontcolor={{FONT_COLOR}}
-	&amp;fontlinkcolor={{LINK_COLOR}}
-#		
-# Replace {{DISQUS_SHORTNAME}} with Disqus shortname attached to blog.
-# Replace {{FONT_FAMILY}} with CSS font family - default: sans-serif.
-# Replace {{FONT_COLOR}} with CSS HEX color code - default: 333333.
-# Replace {{LINK_COLOR}} with HEX color code - default: 06c
-#
-# ACTION TYPE - RANDOM POSTS:
-[*]	?ampactions=feed
-	&amp;feedlimit={{FEED_LIMIT}}
-	&amp;feedresults={{FEED_RESULTS}}
-	&amp;feeddefaultimage={{PATH_TO_DEFAULT_IMAGE}}
-	&amp;feeddate={{DATES_IN_ARRAY}}
-	&amp;feeddatesep={{DATE_SEPARATOR}}
-	&amp;feedcontainerheight={{HEIGHT_IN_PX}}
-	&amp;feedchars={{SUMMARY_CHARS}}
-	&amp;feedtarget={{LINK_TARGET}}
-	&amp;fontfamily={{FONT_FAMILY}}
-	&amp;fontcolor={{FONT_COLOR_IN_HEX}}
-	&amp;fontlinkcolor={{LINK_COLOR_IN_HEX}}
-	&amp;canonicalurl=&quot; + data:blog.canonicalUrl + &quot;
-	&amp;url=&quot; + data:blog.url + &quot;
-	&amp;homepageurl=&quot; + data:blog.homepageUrl + &quot;
-	&amp;canonicalhomepageurl=&quot; + data:blog.canonicalHomepageUrl' 
-#	
-# ACTION TYPE - RANDOM POSTS (Optional to disable)
-	&amp;feedrandom=false
-	&amp;image=false	
-	&amp;feedsummary=false
-#
-[*] Required values. View DEMO for usages.
-#
+@title:		ampaction(js) Blogger amp-iframe helper widget
+@author: 	(c) 2016 irsah indesigns
+@created: 	Feb 2016
+@demo:		
+@url:		http://www.irsah.com
+@blog:		http://blog.irsah.com
 */
-
 var doc = document;
 var win = window;
 
@@ -199,18 +195,20 @@ function receiveMessage( event ) {
 	};    
 };
 
+// url search query helper
 function $_GET( vars ) {
-	var query = win.location.search.substring(1);
+	var query = win.location.search.slice(1);
 	var variable = query.split('&');
 	for (var i = 0; i < variable.length; i++) {
-		var values = variable[i].split('=');
-		if ( values[0] === vars ) {
-			return decodeURIComponent( values[1].replace(/\+/g, " ") );
+		var name = variable[i].split('=');
+		if ( name[0] === vars ) {
+			return decodeURIComponent( name[1].replace(/\+/g, " ") );
 	    	};
 	};
 	return (false);
 };
 
+// load external js scripts helper
 function loadJs( scripts, index, loaded ) {
 	if ( scripts[index] ) {
 		var files = doc.createElement('script');
@@ -225,12 +223,19 @@ function loadJs( scripts, index, loaded ) {
 		loaded();
 	 };
 };
-	
+
+// loading styles hekper
 function loadStyles(){
-	var fontfamily = $_GET('fontfamily') === false ? 'sans-serif': $_GET('fontfamily');
-	var fontlinkcolor = $_GET('fontlinkcolor') === false ? '06c' : $_GET('fontlinkcolor');
-	var fontcolor = $_GET('fontcolor') === false ? '333333' : $_GET('fontcolor') ;
-	var CSS = 'body, #disqus_thread, #comments { font-family:' + fontfamily + '; color: #' + fontcolor + '; } a, a:link, #comments a, #disqus_thread a { color: #' + fontlinkcolor + '}';
+	if( $_GET('canonicalhomepageurl') === false ) return (false);
+	
+	var bs = doc.createElement('link');
+	bs.setAttribute('rel','text/stylesheet');
+	bs.type= "text/css";
+	bs.href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";
+	HEAD.appendChild( bs );
+	
+	var styles = ['normal','normal','16','1.428','san-serif','3b3b3b']
+	var CSS = 'body, #disqus_thread { font: '+$_GET('fontstyle')+' '+$_GET('fontweight')+' '+$_GET('fontsize')+'px/'+$_GET('fontlineheight')+' '+$_GET('fontfamily')+'; color: #'+$_GET('fontcolor')+'; } a, #disqus_thread a { color: #'+$_GET('fontlinkcolor')+'; }';
 	var HEAD = doc.getElementsByTagName('head')[0];
 	var TAG = doc.createElement('style');
 	TAG.type = 'text/css';
@@ -240,10 +245,10 @@ function loadStyles(){
 		TAG.appendChild( doc.createTextNode( CSS ) );
 	};	
 	HEAD.appendChild( TAG );
+
 };
 	
-/* loads Disqus js */
-var pagetype = $_GET('pagetype') === false ? 'item' : $_GET('pagetype');
+// disqus specific variables
 var disqus_shortname = $_GET('shortname');
 var disqus_blogger_current_url = $_GET('canonicalurl');
 if ( disqus_blogger_current_url === false ) {
@@ -252,9 +257,15 @@ if ( disqus_blogger_current_url === false ) {
 var disqus_blogger_homepage_url = $_GET('homepageurl');
 var disqus_blogger_canonical_homepage_url = $_GET('canonicalhomepageurl');
 
-function loadDisqus(){ 
+// loads disqus script
+function loadDisqus(){
+	
+	// remove unused div and load styles...
 	doc.getElementById('feeder').parentNode.removeChild( doc.getElementById('feeder') );
+	doc.getElementById('ContactForm1').parentNode.removeChild( doc.getElementById('ContactForm1') );
 	loadStyles();
+	
+	// prep disqus script and load...
 	var HEAD = doc.getElementsByTagName('head')[0];
 	var js = doc.createElement('script');
 	js.type = 'text/javascript';
@@ -262,52 +273,158 @@ function loadDisqus(){
 	js.src = '//' + disqus_shortname + '.disqus.com/blogger_item.js';
 	HEAD.appendChild( js );
 };
-	
-function loadFeed(){
-	if( $_GET('canonicalhomepageurl') === false ) return (false);
-	loadStyles();
-	var FEED = $_GET('canonicalhomepageurl') + 'feeds/posts/default?alt=rss';
-	var feed_default_image = $_GET('feeddefaultimage') === false ? '//4.bp.blogspot.com/-MowVHfLkoZU/VhgIRyPbIoI/AAAAAAAATtE/qHST4Q2YCCc/s1600/placeholder-image.jpg' : $_GET('feeddefaultimage');
-	var months = $_GET('feedmonths');
-	if( months !== false && months.indexOf(',') !== -1){
-		months = months.split(',');
-	};
-	var feed_months = months === false ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] : months;
-	var feed_height = $_GET('feedcontainerheight') === false ? 600 : parseFloat( $_GET('feedcontainerheight') );
 
-	$('#feeder').YahooRSS( FEED , {
-		random : $_GET('feedrandom') === false ? true : false,
-		ssl : $_GET('feedssl') === false ? true : false,
-		limit : $_GET('feedlimit') === false ? 20 : parseFloat( $_GET('feedlimit')  ),
-		results : $_GET('feedresults') === false ? 5 : parseFloat( $_GET('feedresults')  ),		
-		image : $_GET('feedimage') === false ? true : parseFloat( $_GET('feedimage')  ),
-		default_image : feed_default_image,
-		labels : $_GET('feedlabels') === false ? false : true,
-		date : $_GET('feeddate') === false ? 'mmddyy' : $_GET('feeddate'),
-		datesep : $_GET('feeddatesep') === false ? ' ' : $_GET('feeddatesep'),
-		months : feed_months,
-		summary : $_GET('feedsummary') === false ? true : false,
-		chars : $_GET('feedchars') === false ? 160 : parseFloat( $_GET('feedchars') ),
-		target : $_GET('feedtarget') === false ? '_self' : $_GET('feedtarget'),
-		showerror: $_GET('feederror') === false ? true : false,
-		errormsg: $_GET('feederrormsg') === false ? '' : $_GET('feederrormsg')
-	}, function () {
-	    // optional callback function
-		$('#feeder').css({ 'max-height' : feed_height+'px' });
+function updateHeight( height ){
+	win.parent.postMessage({
+		sentinel: 'amp',
+		type: 'embed-size',
+		height: height
+	}, '*');
+};
+
+// loads feed for blogs with HTTP or HTTPS
+function loadFeed(){
+	// check if blog canonical url
+	if( $_GET('canonicalhomepageurl') === false ) return (false);
+	
+	// remove unused div and load styles
+	doc.getElementById('comments').parentNode.removeChild( doc.getElementById('comments') );
+	doc.getElementById('ContactForm1').parentNode.removeChild( doc.getElementById('ContactForm1') );
+	loadStyles();
+	
+	// prep feed urls
+	var FEED = $_GET('canonicalhomepageurl') + 'feeds/posts/default?alt=rss';
+
+	// setup feed defaults
+	var settings = {
+		random : true,
+		ssl : true,
+		limit : parseFloat( $_GET('feedlimit') ),
+		results : parseFloat( $_GET('feedresults') ),		
+		image : parseFloat( $_GET('feedimage') ),
+		default_image : '//4.bp.blogspot.com/-MowVHfLkoZU/VhgIRyPbIoI/AAAAAAAATtE/qHST4Q2YCCc/s1600/placeholder-image.jpg',
+		labels : true,
+		date : 'mmddyy',
+		datesep : [' ', ', '],
+		months : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+		summary : 160,
+		content_type: null,
+		content_url: null,
+      		related: false,
+      		related_label: null,
+      		status: false
+	};
+	
+	// check if custom settings available
+	if ( $_GET('feedrandom') !== false ) settings.random = false;
+	if ( $_GET('feedssl') !== false ) settings.ssl = false;	
+	if ( $_GET('feeddefaultimage') !== false ) settings.default_image = $_GET('feeddefaultimage');				
+	if ( $_GET('feedlabels') !== false ) settings.labels = false;	
+	if ( $_GET('feeddate') !== false ) {
+		settings.date = $_GET('feeddate');
+		// setup months array
+		var date_months = $_GET('feedmonths');
+		if( date_months !== false && date_months.indexOf('[]') !== -1){
+			settings.months = date_months.split('[]');
+		};
+		// setup date separator array
+		var date_separator = $_GET('feeddatesep');
+		if( date_separator !== false && date_separator.indexOf('[]') !== -1 ){
+			settings.datesep = date_separator.split('[]');
+		};
+	};
+	if ( $_GET('feedsummary') !== false ) settings.summary = parseFloat( $_GET('feedsummary') );
+	if ( $_GET('feedcontenttype') !== false ) {
+		settings.content_type = $_GET('feedcontenttype');
+		settings.content_url = $_GET('canonicalurl');
+	};
+	if ( $_GET('feedrelated') !== false ){
+	    	settings.related = true;
+		settings.related_label = $_GET('feedrelatedlabel');	
+	};
+	if ( $_GET('feedstatus') !== false ) settings.status = true;
+	// initialize Yql feed
+	// callback to assign amp-iframe height
+	$('#feeder').YqlRSS( FEED , settings , function () {
+		var div_height = doc.body.scrollHeight;
+		if ( $('.feeds').length || $('.post-body-frame').length ){
+			$('.post-body-frame a').attr( 'target' , '_blank' );
+			var divs = setInterval(function() {
+				if ( $('#feeder').height() !== div_height ){
+					var height = $('#feeder').height();
+					div_height = height;
+					updateHeight( div_height );
+				} else {
+					updateHeight( div_height );
+					clearInterval( divs );
+				}
+			}, 3000 );
+		} else {
+			updateHeight( div_height );
+		};
 	});
 };
 
+function loadContactForm(){
+	
+	if( $_GET('blogid') === false && $_GET('canonicalUrl') === false) return false;
+	
+	var FORM = doc.getElementById('ContactForm1');
+	doc.getElementById('feeder').parentNode.removeChild( doc.getElementById('feeder') );
+	doc.getElementById('comments').parentNode.removeChild( doc.getElementById('comments') );
+	
+	loadStyles();
+	FORM.style = 'display:block';
+	
+	var js = doc.createElement('script');
+	js.src = "https://www.blogger.com/static/v1/widgets/3785855890-widgets.js";
+	js.type = "text/javascript";
+	doc.getElementsByTagName('head')[0].appendChild( js );
+	
+	_WidgetManager._Init('//www.blogger.com/rearrange?blogID\x3d'+$_GET('blogid'),$_GET('canonicalUrl'), $_GET('blogid'));
+	_WidgetManager._RegisterWidget('_ContactFormView',new _WidgetInfo('ContactForm1','main', null, FORM, {
+	  'contactFormMessageSendingMsg': $_GET('contactsendingmsg'), 
+	  'contactFormMessageSentMsg': $_GET('contactsentmsg'), 
+	  'contactFormMessageNotSentMsg': $_GET('contactnotsentmsg'), 
+	  'contactFormInvalidEmailMsg': $_GET('contactinvalidemailmsg'), 
+	  'contactFormEmptyMessageMsg': $_GET('contactemptymsg'), 
+	  'title': 'Contact Form', 
+	  'blogId': $_GET('blogid'), 
+	  'contactFormNameMsg': 'Name', 
+	  'contactFormEmailMsg': 'Email', 
+	  'contactFormMessageMsg': 'Message', 
+	  'contactFormSendMsg': 'Send', 
+	  'submitUrl': 'https://www.blogger.com/contact-form.do'
+	}, 'displayModeFull'));	
+	var body_height = doc.body.scrollHeight;
+	var check_div = setInterval(function() {
+		if( FORM.scrollHeight < body_height ){
+			var form_height = FORM.height ;
+			body_height = height;
+			updateHeight( body_height );
+		} else {
+			updateHeight( body_height );
+			clearInterval( check_div );
+		}
+	}, 3000 );
+};
+	
+// add external libraries
 var scripts = [];
 scripts.push('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
 
+// grab url action
 var actions = $_GET('ampactions');
 switch ( actions ){
-	case 'disqus' : loadDisqus(); break;
+	case 'disqus' : loadDisqus(); 
+	break;
 	case 'feed' : 
 		loadJs( scripts , 0 , function(){ 
-			!function(a){"use strict";function b(a){for(var b,c,d=a.length;0!==d;)c=Math.floor(Math.random()*d),d-=1,b=a[d],a[d]=a[c],a[c]=b;return a}function c(a){var b;if(a.indexOf("<img")===-1&&a.indexOf("<amp-img")===-1)return b=options.default.image;var c=a.indexOf("<img");c===-1&&(c=a.indexOf("<amp-img"));var d=a.indexOf('src="',c),e=a.indexOf('"',d+5),b=a.substring(d+5,e);return b.length||(b=options.default.image),b}a.fn.YahooRSS=function(b,c,e){var f={random:!0,ssl:!1,limit:20,results:3,image:!0,default_image:"//4.bp.blogspot.com/-MowVHfLkoZU/VhgIRyPbIoI/AAAAAAAATtE/qHST4Q2YCCc/s1600/placeholder-image.jpg",labels:!0,date:"ddmmyy",datesep:" ",months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],summary:!0,chars:160,target:"_self",showerror:!0,errormsg:""};return c=a.extend(f,c),this.each(function(f,g){var h="";if(c.ssl&&(h="s"),a(g).hasClass("feed-rss")||a(g).addClass("feed-rss"),null===b)return!1;if(c.limit<=0)return!1;var i="http"+h+"://query.yahooapis.com/v1/public/yql?q="+encodeURIComponent('select * from feed where url="'+b+'"');null!==c.limit&&(i+=" limit "+c.limit),i+="&format=json",a.getJSON(i,function(b,f,h){if("success"===f)d(g,b,c),a.isFunction(e)&&e.call(this,a(g));else if("error"===f||"parsererror"===f){if(!c.showerror)return!1;var i;i=""!==c.errormsg?c.errormsg:h,a(g).html('<div class="feed-rss-error"><p>'+i+"</p></div>")}})})};var d=function(d,e,f){var g=e.query.results.item;if(a.isArray(g)||(g=[g]),!g)return!1;f.random&&b(g);var h=a("<ul/>").attr({class:"feeds"});a.each(g,function(b,d){if(b>f.results-1)return!1;var i,j,k,e=g[b],l=a("<li/>").attr({class:"feed"}),m=a("<div/>").attr({class:"feed-image"}),n=a("<div/>").attr({class:"feed-caption"});if(k=void 0!==e.description?e.description:e.encoded,f.image){var o=a("<img/>").attr("src",c(k));l.append(m.append(o))}if(e.pubDate){var p=new Date(e.pubDate),q=p.getDate().toString(),r=p.getMonth(),s=p.getFullYear(),t=f.datesep,u=f.months;if(a.isArray(u)&&12===u.length)var r=u[p.getMonth()];switch(f.date){case"mmddyy":j=r+""+t+q+t+s;break;case"ddmmyy":j=q+""+t+r+t+s;break;case"yymmdd":j=s+""+t+r+t+q;break;case"yyddmm":j=s+""+t+q+t+r;break;case"localedate":j=p.toLocaleDateString();break;case"localedatetime":j=p.toLocaleDateString()+" "+p.toLocaleTimeString()}}if(void 0!==e.category){for(var b=0;b<e.category.length;b++)i+=e.category[b].content+" ";f.labels&&void 0!==e.category&&l.attr({"data-labels":i})}var v=a("<h4/>").append(a("<a/>").attr({href:e.link,target:f.linktarget}).html(e.title));if(n.append(v),f.date&&j&&n.append(a("<div/>").attr({class:"feed-date"}).html(j)),f.summary||f.chars<=0){var w=/<\S[^>]*>/g;k=k.replace(w,""),k.length>f.chars&&(k=k.substring(0,k.lastIndexOf(" ",f.chars))+" ...");var x=a("<p/>").attr({class:"feed-summary"}).append(k);n.append(x)}l.append(n),l.appendTo(h)}),a(d).append(h)}}(jQuery);	
-			loadFeed() 
+			eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('l a=["\\t\\f\\b\\q\\f\\c\\h\\n\\r\\c","\\e\\b\\p\\w\\c\\L","\\h\\d\\p\\i\\k\\o","\\B\\e\\k\\k\\h","\\1j\\G\\e\\1v\\z\\z","\\B\\p","\\x\\x\\2l\\I\\K\\v\\I\\K\\e\\k\\w\\f\\v\\k\\c\\I\\r\\k\\o\\x\\F\\1K\\k\\2w\\2P\\2O\\B\\2o\\2m\\k\\3g\\3I\\x\\2P\\L\\w\\2a\\1v\\y\\3y\\K\\2a\\k\\2a\\x\\U\\U\\U\\U\\U\\U\\U\\U\\1T\\c\\3x\\x\\G\\2O\\z\\1T\\2l\\3D\\2n\\1j\\1D\\1D\\r\\x\\f\\2J\\3M\\2G\\2G\\x\\v\\e\\d\\r\\b\\L\\k\\e\\i\\b\\h\\F\\n\\o\\d\\w\\b\\I\\1x\\v\\w","\\i\\i\\o\\o\\y\\y","\\q","\\3L\\q","\\1g\\d\\p","\\1L\\b\\K","\\1K\\d\\h","\\U\\v\\h","\\1K\\d\\y","\\1g\\t\\p","\\1g\\t\\e","\\U\\t\\w","\\z\\b\\v","\\1c\\r\\c","\\1o\\k\\1n","\\1S\\b\\r","\\1L\\b\\d\\c\\t\\h\\b\\i","\\b\\1C\\c\\b\\p\\i","","\\f\\f\\e","\\f","\\B\\b\\b\\i\\F\\h\\f\\f","\\L\\d\\f\\1D\\e\\d\\f\\f","\\d\\i\\i\\1D\\e\\d\\f\\f","\\e\\n\\o\\n\\c","\\L\\c\\c\\v","\\1i\\x\\x\\G\\t\\b\\h\\y\\I\\y\\d\\L\\k\\k\\d\\v\\n\\f\\I\\r\\k\\o\\x\\1n\\2J\\x\\v\\t\\K\\e\\n\\r\\x\\y\\G\\e\\3q\\G\\1F","\\f\\b\\e\\b\\r\\c\\q\\3F\\q\\B\\h\\k\\o\\q\\B\\b\\b\\i\\q\\2w\\L\\b\\h\\b\\q\\t\\h\\e\\1F\\1A","\\1A","\\q\\e\\n\\o\\n\\c\\q","\\3B\\B\\k\\h\\o\\d\\c\\1F\\1x\\f\\k\\p","\\f\\c\\d\\c\\t\\f","\\1j\\G\\e\\1v\\z\\z\\1M\\1x\\f\\1O\\1i\\q\\w\\b\\c\\1g\\z\\1c\\1o\\q\\h\\b\\G\\t\\b\\f\\c\\q\\r\\k\\o\\v\\e\\b\\c\\b\\i\\2A","\\e\\k\\w","\\d\\e\\2w\\d\\y\\f","\\P\\i\\n\\1n\\q\\r\\e\\d\\f\\f\\1F\\1A\\B\\b\\b\\i\\F\\h\\f\\f\\F\\b\\h\\h\\k\\h\\1A\\R\\P\\v\\R","\\P\\x\\v\\R\\P\\x\\i\\n\\1n\\R","\\L\\c\\o\\e","\\1j\\G\\e\\1v\\z\\z\\1M\\1x\\f\\1O\\1i\\q\\w\\b\\c\\1g\\z\\1c\\1o\\q\\h\\b\\G\\t\\b\\f\\c\\q\\B\\d\\n\\e\\b\\i\\2A\\q\\z\\c\\d\\c\\t\\f\\1i\\q","\\B\\d\\n\\e","\\r\\k\\p\\c\\b\\p\\c\\1Y\\c\\y\\v\\b","\\h\\b\\e\\d\\c\\b\\i","\\n\\f\\1L\\t\\p\\r\\c\\n\\k\\p","\\r\\d\\e\\e","\\i\\k\\p\\b","\\1j\\G\\e\\1v\\z\\z\\1M\\1x\\f\\1O\\1i\\q\\w\\b\\c\\1g\\z\\1c\\1o\\q\\h\\b\\G\\t\\b\\f\\c\\q\\f\\c\\d\\h\\c\\b\\i\\I","\\h\\b\\f\\t\\e\\c\\f","\\G\\t\\b\\h\\y","\\1j\\G\\e\\1v\\z\\z\\1M\\1x\\f\\1O\\1i\\q\\w\\b\\c\\1g\\z\\1c\\1o\\q\\h\\b\\G\\t\\b\\f\\c\\q\\b\\h\\h\\k\\h\\2A\\q\\z\\c\\d\\c\\t\\f\\1i\\q\\1o\\k\\q\\i\\d\\c\\d\\q\\h\\b\\c\\h\\n\\b\\1n\\b\\i\\I","\\w\\b\\c\\1g\\z\\1c\\1o","\\b\\d\\r\\L","\\P\\n\\o\\w","\\n\\p\\i\\b\\1C\\1c\\B","\\P\\d\\o\\v\\F\\n\\o\\w","\\n\\o\\d\\w\\b","\\i\\b\\B\\d\\t\\e\\c","\\f\\h\\r\\1F\\1A","\\f\\t\\K\\f\\c\\h\\n\\p\\w","\\n\\c\\b\\o","\\n\\f\\U\\h\\h\\d\\y","\\e\\n\\p\\2m","\\r\\k\\p\\c\\b\\p\\c\\1Y\\t\\h\\e","\\w\\h\\b\\v","\\i\\b\\f\\r\\h\\n\\v\\c\\n\\k\\p","\\v\\k\\f\\c\\F\\K\\k\\i\\y\\F\\B\\h\\d\\o\\b","\\d\\c\\c\\h","\\P\\i\\n\\1n\\x\\R","\\h\\b\\v\\e\\d\\r\\b","\\f\\t\\o\\o\\d\\h\\y","\\e\\d\\f\\c\\2a\\p\\i\\b\\1C\\1c\\B","\\q\\I\\I\\I","\\c\\b\\1C\\c\\L\\c\\o\\e","\\c\\b\\1C\\c","\\d\\v\\v\\b\\p\\i","\\1D\\t\\h\\h\\b\\p\\c\\e\\y\\q\\r\\k\\p\\c\\b\\p\\c\\f\\q\\t\\p\\d\\1n\\d\\n\\e\\d\\K\\e\\b\\I\\I\\I","\\r\\d\\c\\b\\w\\k\\h\\y","\\r\\k\\p\\c\\b\\p\\c","\\h\\b\\e\\d\\c\\b\\i\\1Y\\e\\d\\K\\b\\e","\\B\\b\\b\\i\\f","\\P\\t\\e\\x\\R","\\B\\b\\b\\i","\\P\\e\\n\\x\\R","\\B\\b\\b\\i\\F\\n\\o\\d\\w\\b","\\B\\b\\b\\i\\F\\r\\d\\v\\c\\n\\k\\p","\\b\\p\\r\\k\\i\\b\\i","\\c\\L\\t\\o\\K\\p\\d\\n\\e","\\t\\h\\e","\\x\\f\\3c\\2n\\F\\r\\x","\\f\\3c\\2n\\F\\r","\\f\\h\\r","\\P\\n\\o\\w\\x\\R","\\c\\n\\c\\e\\b","\\v\\t\\K\\1S\\d\\c\\b","\\w\\b\\c\\1S\\d\\c\\b","\\w\\b\\c\\1K\\k\\p\\c\\L","\\w\\b\\c\\1L\\t\\e\\e\\1j\\b\\d\\h","\\i\\d\\c\\b\\f\\b\\v","\\o\\k\\p\\c\\L\\f","\\o\\o\\i\\i\\y\\y","\\y\\y\\o\\o\\i\\i","\\y\\y\\i\\i\\o\\o","\\c\\k\\2o\\k\\r\\d\\e\\b\\1S\\d\\c\\b\\z\\c\\h\\n\\p\\w","\\e\\k\\r\\d\\e\\b\\i\\d\\c\\b","\\c\\k\\2o\\k\\r\\d\\e\\b\\1T\\n\\o\\b\\z\\c\\h\\n\\p\\w","\\e\\k\\r\\d\\e\\b\\i\\d\\c\\b\\c\\n\\o\\b","\\i\\d\\c\\b","\\e\\d\\K\\b\\e\\f","\\1Y\\K\\e\\d\\p\\2m","\\P\\d\\x\\R","\\P\\L\\2l\\x\\R","\\B\\b\\b\\i\\F\\i\\d\\c\\b","\\B\\b\\b\\i\\F\\f\\t\\o\\o\\d\\h\\y","\\P\\v\\x\\R","\\d\\v\\v\\b\\p\\i\\1T\\k"];(H(u){a[0];H 2Y(A){2C(l 2i,1e,Z=A[a[1]];0!==Z;){1e=2T[a[3]](2T[a[2]]()*Z),Z-=1,2i=A[Z],A[Z]=A[1e],A[1e]=2i};E A}u[a[5]][a[4]]=H(2k,m,2j){l 2F={3K:1B,3J:1B,3G:20,3H:5,3w:3t,3k:a[6],3j:1B,3m:a[7],3i:[a[8],a[9]],3h:[a[10],a[11],a[12],a[13],a[14],a[15],a[16],a[17],a[18],a[19],a[20],a[21]],3l:3v,3u:O,3s:1k,3r:1k,3o:1B,3p:a[22],3E:O};m=u[a[23]](2F,m);E 2R[a[3a]](H(J,A){l Z=a[24];j(m[a[25]]){Z=a[26]};j(!u(A)[a[28]](a[27])){u(A)[a[29]](a[27])};j(2k===1k){E O};j(m[a[30]]<=0){E O};l 1P=a[31]+Z+a[32]+4r(a[33]+2k+a[34]);j(m[a[30]]!==1k){1P+=a[35]+m[a[30]]};1P+=a[36];u[a[3N]](1P,H(Q){j(m[a[37]]){1W[a[39]](a[3W]);j(Q[a[1E]][a[1t]]===1k){1W[a[39]](a[3X]);E O}}})[a[3Y]](H(Q){j(m[a[46]]){3f(A,Q,m)}1z{j(m[a[47]]){2r(A,Q,m)}1z{2r(A,Q,m)}};j(u[a[48]](2j)){2j[a[49]](2R,u(A))}})[a[45]](H(3Q,2g,3R){u(A)[a[43]](a[41]+2g+a[42]);j(m[a[37]]){1W[a[39]](a[44]+2g)};E O})[a[40]](H(){j(m[a[37]]){1W[a[39]](a[38])}})})};H 3e(1f){l 1p;j(1f[a[1m]](a[2S])===-1&&1f[a[1m]](a[2U])===-1){1p=2Q[a[2Z]][a[1Q]];E 1p};l 1e=1f[a[1m]](a[2S]);j(1e===-1){1e=1f[a[1m]](a[2U])};l 2q=1f[a[1m]](a[4d],1e),2H=1f[a[1m]](a[34],2q+5),1p=1f[a[1V]](2q+5,2H);j(!1p[a[1]]){1p=2Q[a[2Z]][a[1Q]]};E 1p}l 3f=H(A,Q,m){j(Q[a[1E]][a[1t]]===1k){E O};l D=Q[a[1E]][a[1t]][a[2V]];j(!u[a[2z]](D)){D=[D]};j(!D){E O};l M=a[24];l 1s=u[a[3b]](D,H(1l){E 1l[a[2X]]===m[a[4c]]});j(1s[a[1]]){j(1s[0][a[1w]]!==W){2N(m[a[46]]){1a a[43]:M=u(a[1N])[a[V]]({1r:a[4b]})[a[43]](1s[0][a[1w]]);X;1a a[4f]:l 1u=/<(?!4g\\s*\\/?)[^>]+>/g;M=1s[0][a[1w]][a[1U]](1u,a[24]);j(M[a[1]]>m[a[1q]]){M=M[a[1V]](0,M[a[2h]](a[8],m[a[1q]]))+a[2f]};X;1a a[4k]:l 1u=/<\\S[^>]*>/g;M=1s[0][a[1w]][a[1U]](1u,a[24]);j(M[a[1]]>m[a[1q]]){M=M[a[1V]](0,M[a[2h]](a[8],m[a[1q]]))+a[2f]};X};u(A)[a[T]](M)}}1z{u(A)[a[T]](a[4i])}};l 2r=H(A,Q,m){j(Q[a[1E]][a[1t]]===1k){E O};l D=Q[a[1E]][a[1t]][a[2V]];j(!u[a[2z]](D)){D=[D]};j(!D){E O};j(m[a[2]]){2Y(D)};j(m[a[47]]){l 2c=u[a[3b]](D,H(1l){j(1l[a[Y]]!==W){l 2e;l 2d=O;2C(l J=0;J<1l[a[Y]][a[1]];J++){j(1l[a[Y]][J][a[1R]]===m[a[2y]]){2d=1B;2e=J;X}};j(2d){E 1l[a[Y]][2e][a[1R]]===m[a[2y]]}}});j(2c[a[1]]){D=2c}};l 2t=u(a[3Z])[a[V]]({1r:a[3S]});u[a[3a]](D,H(J){j(J>2p(m[a[1t]])-1){E O};l C=D[J];l 2u=a[24],1b,N;l 1Z=u(a[3T])[a[V]]({1r:a[3U]});l 2s=u(a[1N])[a[V]]({1r:a[3V]});l 3d=u(a[1N])[a[V]]({1r:a[4l]});j(C[a[1w]]!==W){N=C[a[1w]]}1z{N=C[a[4p]]};j(m[a[1Q]]>0){l 1h;j(C[a[2W]]!==W){1h=C[a[2W]][a[4G]];j(1h[a[1m]](a[4B])!==-1){1h=1h[a[1U]](a[4F],a[26]+m[a[1Q]])}}1z{j(N===W){E O};1h=3e(N)};l 2x=u(a[4C])[a[V]](a[4D],1h);j(C[a[2b]]!==W){2x[a[V]]({4E:C[a[2b]]})};2s[a[T]](2x)};j(C[a[2I]]){l 1d=4A 4x(C[a[2I]]);l 1G=1d[a[4q]]().4y();l 1y=1d[a[2M]]();l 1I=1d[a[4o]]();l 1J=m[a[2E]][0];l 1H=m[a[2E]][1];l 1X=m[a[4n]];j(u[a[2z]](1X)&&1X[a[1]]===12){l 1y=1X[1d[a[2M]]()]};2N(m[a[2K]]){1a a[4s]:1b=1y+a[24]+1J+a[24]+1G+a[24]+1H+a[24]+1I;X;1a a[7]:1b=1G+a[24]+1J+a[24]+1y+a[24]+1H+a[24]+1I;X;1a a[4w]:1b=1I+a[24]+1J+a[24]+1y+a[24]+1H+a[24]+1G;X;1a a[4v]:1b=1I+a[24]+1J+a[24]+1G+a[24]+1H+a[24]+1y;X;1a a[4u]:1b=1d[a[2L]]();X;1a a[4t]:1b=1d[a[2L]]()+a[8]+1d[a[4m]]();X}};j(C[a[Y]]!==W){2C(l J=0;J<C[a[Y]][a[1]];J++){j(C[a[Y]][J][a[1R]]!==m[a[2y]]){2u+=C[a[Y]][J][a[1R]]+a[8]}};j(m[a[4z]]&&C[a[Y]]!==W){1Z[a[V]]({"\\i\\d\\c\\d\\F\\e\\d\\K\\b\\e\\f":2u})}};l 2v=a[24];j(C[a[2b]]!==W){l 2v=u(a[3P])[a[T]](u(a[3O])[a[V]]({4a:C[a[2X]],4h:a[4j]})[a[43]](C[a[2b]]))};l 2D=a[24];j(m[a[2K]]&&1b){2D=u(a[1N])[a[V]]({1r:a[3z]})[a[43]](1b)};l 2B=a[24];j(N!==W&&2p(m[a[1q]])>0){l 1u=/<\\S[^>]*>/g;N=N[a[1U]](1u,a[24]);j(N[a[1]]>m[a[1q]]){N=N[a[1V]](0,N[a[2h]](a[8],2p(m[a[1q]])))+a[2f]};2B=u(a[3A])[a[V]]({1r:a[3C]})[a[T]](N)};1Z[a[T]](2s)[a[T]](3d[a[T]](2v)[a[T]](2D)[a[T]](2B));1Z[a[3n]](2t)});u(A)[a[T]](2t)}})(4e)',62,291,'||||||||||_0x37bc|x65|x74|x61|x6C|x73||x72|x64|if|x6F|var|_0x751cx8|x69|x6D|x6E|x20|x63||x75|_0x751cx1|x70|x67|x2F|x79|x53|_0x751cx3|x66|_0x751cx21|_0x751cx17|return|x2D|x71|function|x2E|_0x751cxb|x62|x68|_0x751cx18|_0x751cx24|false|x3C|_0x751cx10|x3E||79|x41|71|undefined|break|81|_0x751cx6|||||||||||case|_0x751cx23|x4F|_0x751cx2a|_0x751cx5|_0x751cx12|x4A|_0x751cx28|x3A|x59|null|_0x751cx1a|58|x76|x4E|_0x751cx13|74|class|_0x751cx19|52|_0x751cx1b|x52|69|x6A|_0x751cx2c|else|x22|true|x78|x43|53|x3D|_0x751cx2b|_0x751cx2f|_0x751cx2d|_0x751cx2e|x4D|x46|x28|72|x29|_0x751cxc|60|82|x44|x54|73|63|console|_0x751cx30|x5F|_0x751cx25|||||||||||x49|97|_0x751cx1d|_0x751cx1f|_0x751cx1e|76|_0x751cxe|75|_0x751cx4|_0x751cx9|_0x751cx7|x34|x6B|x32|x4C|parseFloat|_0x751cx14|_0x751cx1c|_0x751cx26|_0x751cx20|_0x751cx22|_0x751cx31|x77|_0x751cx29|83|65|x21|_0x751cx33|for|_0x751cx32|102|_0x751cxa|x30|_0x751cx15|98|x31|111|107|100|switch|x48|x56|options|this|57|Math|59|64|91|66|_0x751cx2|61|||||||||||56|68|x37|_0x751cx27|_0x751cx11|_0x751cx16|x5A|months|datesep|labels|default_image|summary|date|119|related|related_label|x3F|content_url|content_type|480|layout|300|image|x45|x50|116|118|x26|117|x51|status|x2A|limit|results|x55|ssl|random|x2C|x36|55|114|115|_0x751cxd|_0x751cxf|84|87|86|88|51|54|50|85|||||||||||href|70|67|62|jQuery|77|br|target|80|113|78|89|109|103|101|90|99|encodeURIComponent|104|110|108|106|105|Date|toString|112|new|93|96|95|alt|94|92'.split('|'),0,{}));
+			loadFeed(); 
 		}); 
+	break;
+	case 'contactform': loadContactForm(); 
 	break;
 };
 </script>
